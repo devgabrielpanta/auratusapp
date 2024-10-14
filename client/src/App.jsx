@@ -14,15 +14,17 @@ export default function App() {
   const [alertMessage, setAlertMessage] = useState("hidden");
 
   const getBookings = async () => {
-    const serverUrl = "http://localhost:3001/bookings";
-    const response = await fetch(serverUrl, {
-      method: "GET",
-    });
-    const data = await response.json();
-    console.log(bookings);
-
-    setBookings(data);
-    setLoading(false);
+    const serverUrl = "http://localhost:3001/bookings"; // colocar na variável de ambientes
+    try {
+      const response = await fetch(serverUrl, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setBookings([...data]); //spread operator
+      setLoading(false);
+    } catch (error) {
+      console.log('erro ao buscar lista de reservas');
+    };  
   };
 
   useEffect(() => {
