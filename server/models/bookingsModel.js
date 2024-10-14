@@ -1,4 +1,6 @@
-import db from "../db.js";
+import pool from "../db.js";
+
+const db = pool;
 
 const dbName = process.env.DB_DBNAME;
 
@@ -15,14 +17,25 @@ const closeDb = () => {
 // (C)reate bookings:
 const create = (bookingData) => {
   return new Promise((resolve, reject) => {
-    const query = `INSERT INTO ${dbName} 
-                       (guest_name, guest_count, booking_time, guest_phone, guest_mail, booking_status, booking_source) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const values = Object.values(bookingData);
+    db.getConnection((err, connection) => {
+      if (err) {
+        console.error('Error connecting to the database:', err);
+        return;
+      }
+      const query = `INSERT INTO ${dbName} 
+      (guest_name, guest_count, booking_time, guest_phone, guest_mail, booking_status, booking_source) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)`;
+      const values = Object.values(bookingData);
 
-    db.query(query, values, (err, result) => {
+      db.query(query, values, (err, result) => {
       if (err) reject(err);
-      resolve(result);
+      resolve({
+      id: result.insertId,
+      ...bookingData
+      });
+      });
+    
+      connection.release();
     });
   });
 };
@@ -30,28 +43,43 @@ const create = (bookingData) => {
 // (R)ead bookings:
 const getAll = () => {
   return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM ${dbName}`;
+    db.getConnection((err, connection) => {
+      if (err) {
+        console.error('Error connecting to the database:', err);
+        return;
+      }
+      const query = `SELECT * FROM ${dbName}`;
 
-    db.query(query, (err, result) => {
-      if (err) reject(err);
-      resolve(result);
+      db.query(query, (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+      
+      connection.release();
     });
-
-    closeDb();
   });
 };
 
 // (U)pdate bookings:
 const update = (id, bookingData) => {
   return new Promise((resolve, reject) => {
-    const setFields =
-      "guest_name = ?, guest_count = ?, booking_time = ?, guest_phone = ?, guest_mail = ?, booking_status = ?, booking_source = ?";
-    const query = `UPDATE ${dbName} SET ${setFields} WHERE id = ?`;
-    const values = [...Object.values(bookingData), id];
+    db.getConnection((err, connection) => {
+      if (err) {
+        console.error('Error connecting to the database:', err);
+        return;
+      }
 
-    db.query(query, values, (err, result) => {
-      if (err) reject(err);
-      resolve(result);
+      const setFields =
+      "guest_name = ?, guest_count = ?, booking_time = ?, guest_phone = ?, guest_mail = ?, booking_status = ?, booking_source = ?";
+      const query = `UPDATE ${dbName} SET ${setFields} WHERE id = ?`;
+      const values = [...Object.values(bookingData), id];
+
+      db.query(query, values, (err, result) => {
+        if (err) reject(err);
+        resolve(bookingData);
+      });
+      
+      connection.release();
     });
   });
 };
