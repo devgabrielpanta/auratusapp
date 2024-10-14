@@ -22,7 +22,7 @@ export default function BookingsTable({
   bookingsList,
 }) {
   const mappedRows = bookingsList?.map((row, index) => ({ //null list operations ?
-    id: row.id || index, // Use 'index' como fallback caso não tenha um id
+    id: row.id || index,
     guest_name: row.guest_name,
     guest_count: row.guest_count,
     booking_time: row.booking_time,
