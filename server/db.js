@@ -1,5 +1,8 @@
 // imports
 import mysql from "mysql2";
+import dotenv from "dotenv";
+dotenv.config(); //servidor não estava conectando pois o dotenv estava sendo importado apenas no server.js e as variáveis .env não estavam acessíveis nesse arquivo
+
 // settings
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
