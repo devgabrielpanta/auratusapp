@@ -1,7 +1,5 @@
 // imports
-import mysql from "mysql";
-// trocar para a lib mysql2
-// https://www.npmjs.com/package/mysql2
+import mysql from "mysql2";
 // settings
 const db = mysql.createConnection({
   host: process.env.DB_HOST,

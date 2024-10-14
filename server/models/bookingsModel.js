@@ -1,7 +1,6 @@
 import db from "../db.js";
 
-// db name deve ficar no .env
-const dbName = "auratusp_martech.bookings";
+const dbName = process.env.DB_DBNAME;
 
 const closeDb = () => {
   db.end((err) => {
