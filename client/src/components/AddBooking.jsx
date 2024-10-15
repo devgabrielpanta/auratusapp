@@ -15,6 +15,13 @@ import dayjs from "dayjs";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
+import { useState } from "react";
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 export default function BookingsHeader({
   bookingsWidth,
@@ -22,6 +29,18 @@ export default function BookingsHeader({
   alertParams,
   closeParams,
 }) {
+
+  const [bookingTime, setBookingTime] = useState(dayjs(new Date()));
+
+  const checkService = () => {
+    const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
+    if (dayjs(bookingTime).isBefore(breakService)) {
+      return 0;
+    } else {
+      return 1;
+    };
+  };
+
   return (
     <Drawer
       sx={{
@@ -71,14 +90,15 @@ export default function BookingsHeader({
                   views={["day", "month", "hours", "minutes"]}
                   format="DD/MM/YYYY HH:mm"
                   ampm={false} // Define formato de 24 horas
-                  defaultValue={dayjs(new Date())}
+                  defaultValue={bookingTime}
                   viewRenderers={{
                     hours: renderTimeViewClock,
                     minutes: renderTimeViewClock,
                   }}
                   onChange={(date) => {
-                    // Formata a data para 'YYYY-MM-DD' e a passa para o onChange do Controller
-                    onChange(date ? dayjs(date).format("YYYY-MM-DD HH:mm") : null);
+                    const formattedDate = date ? dayjs(date).format("YYYY-MM-DD HH:mm") : null;
+                    onChange(formattedDate); // Atualiza o valor no Controller
+                    setBookingTime(formattedDate); // Atualiza o state
                   }}
                   slotProps={{ textField: { variant: "outlined" } }}
                 />
@@ -86,7 +106,19 @@ export default function BookingsHeader({
             />
           </Box>
         </LocalizationProvider>
-        
+
+        <FormControl sx={{ marginLeft: 8 }}>
+        <Select
+          id="service"
+          value={checkService()}
+          inputProps={{ readOnly: true }}
+        >
+          <MenuItem value={0}><WbSunnyIcon/> Almoço</MenuItem>
+          <MenuItem value={1}><NightlightRoundIcon/> Janta</MenuItem>
+        </Select>
+        <FormHelperText>Serviço</FormHelperText>
+      </FormControl>
+
         <Divider sx={{ height: 30 }} variant="middle" />
 
         <TextFieldElement
