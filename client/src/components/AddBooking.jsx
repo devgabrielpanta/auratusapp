@@ -8,8 +8,7 @@ import {
 } from "react-hook-form-mui";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import Button from "@mui/material/Button";
 import dayjs from "dayjs";
@@ -65,40 +64,21 @@ export default function BookingsHeader({
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box sx={{ marginLeft: 8, marginBottom: 1 }}>
             <Controller
-              name="date"
+              name="booking_time"
               render={({ field: { onChange, value } }) => (
-                <DatePicker
-                  label="Data"
-                  value={value ? dayjs(value) : null} // Converte o valor em dayjs se existir
-                  onChange={(date) => {
-                    // Formata a data para 'YYYY-MM-DD' e a passa para o onChange do Controller
-                    onChange(date ? dayjs(date).format("YYYY-MM-DD") : null);
-                  }}
-                  slotProps={{ textField: { variant: "outlined" } }}
-                />
-              )}
-            />
-          </Box>
-          <Box sx={{ marginLeft: 8 }}>
-            <Controller
-              name="time"
-              render={({ field: { onChange, value } }) => (
-                <TimePicker
+                <DesktopDateTimePicker
                   label="Horário"
-                  value={value ? dayjs(value) : null} // Verifica se o valor é válido antes de usar dayjs
-                  onChange={(time) => {
-                    // Verifica se o valor de time não é nulo e formatado corretamente
-                    if (time && dayjs(time).isValid()) {
-                      onChange(dayjs(time).format("HH:mm:ss")); // Formata para o formato 'HH:mm:ss'
-                    } else {
-                      onChange(null); // Lida com o caso de time ser inválido ou null
-                    }
-                  }}
-                  views={["hours", "minutes"]}
+                  views={["day", "month", "hours", "minutes"]}
+                  format="DD/MM/YYYY HH:mm"
                   ampm={false} // Define formato de 24 horas
+                  defaultValue={dayjs(new Date())}
                   viewRenderers={{
                     hours: renderTimeViewClock,
                     minutes: renderTimeViewClock,
+                  }}
+                  onChange={(date) => {
+                    // Formata a data para 'YYYY-MM-DD' e a passa para o onChange do Controller
+                    onChange(date ? dayjs(date).format("YYYY-MM-DD HH:mm") : null);
                   }}
                   slotProps={{ textField: { variant: "outlined" } }}
                 />
@@ -106,7 +86,7 @@ export default function BookingsHeader({
             />
           </Box>
         </LocalizationProvider>
-
+        
         <Divider sx={{ height: 30 }} variant="middle" />
 
         <TextFieldElement
