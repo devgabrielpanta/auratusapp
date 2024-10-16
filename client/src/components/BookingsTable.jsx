@@ -21,7 +21,8 @@ export default function BookingsTable({
   loading,
   bookingsList,
 }) {
-  const mappedRows = bookingsList?.map((row, index) => ({ //null list operations ?
+  const mappedRows = bookingsList?.map((row, index) => ({
+    //null list operations ?
     id: row.id || index,
     guest_name: row.guest_name,
     guest_count: row.guest_count,
@@ -45,14 +46,14 @@ export default function BookingsTable({
       >
         <LoadingOverlay />
         <DataGrid
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        stickyHeader
-        sx={{ zIndex: 0 }}
-        localeText={{
-          noRowsLabel: "Loading",
-        }}
-      />
+          columns={columns}
+          initialState={{ pagination: { paginationModel } }}
+          stickyHeader
+          sx={{ zIndex: 0 }}
+          localeText={{
+            noRowsLabel: "Loading",
+          }}
+        />
       </Paper>
     );
   }
