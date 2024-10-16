@@ -1,6 +1,31 @@
 import Paper from "@mui/material/Paper";
 import LoadingOverlay from "./LoadingOverlay";
 import { DataGrid } from "@mui/x-data-grid";
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
+import PhoneIcon from '@mui/icons-material/Phone';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import LanguageIcon from '@mui/icons-material/Language';
+import InstagramIcon from '@mui/icons-material/Instagram';
+
+const renderedSource = (props) => {
+  const sourceProp = props.formattedValue;
+  console.log(sourceProp);
+  if(sourceProp === "espontaneo") {
+    return <DirectionsWalkIcon sx={{color:"black"}}/>;
+
+  } else if (sourceProp === "calls") {
+    return <PhoneIcon color="primary" />;
+
+  } else if (sourceProp === "site") {
+    return <LanguageIcon color="primary" />;
+
+  } else if (sourceProp === "social") {
+    return <InstagramIcon color="primary" />;
+
+  } else {
+    return <QuestionMarkIcon/>
+  }
+};
 
 const columns = [
   { field: "id", headerName: "ID", width: 20 },
@@ -10,7 +35,7 @@ const columns = [
   { field: "guest_phone", headerName: "Telemóvel", width: 150 },
   { field: "guest_mail", headerName: "Email", width: 200 },
   { field: "booking_status", headerName: "Status", width: 200 },
-  { field: "booking_source", headerName: "Source", width: 200 },
+  { field: "booking_source", headerName: "Source", width: 70, renderCell: renderedSource},
 ];
 
 const paginationModel = { page: 0, pageSize: 50 };
