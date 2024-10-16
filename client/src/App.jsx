@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
+import crudApi from "./api/crudApi";
 
 const drawerWidth = 400;
 const navHeight = 70;
@@ -13,32 +14,19 @@ export default function App() {
   const [bookings, setBookings] = useState([]);
   const [alertMessage, setAlertMessage] = useState("hidden");
 
-  const getBookings = async () => {
-    const serverUrl = "http://localhost:3001/bookings"; // colocar na variável de ambientes
-    try {
-      const response = await fetch(serverUrl, {
-        method: "GET",
-      });
-      const data = await response.json();
-      setBookings([...data]); //spread operator
-      setLoading(false);
-    } catch (error) {
-      console.log('erro ao buscar lista de reservas');
-    };  
-  };
-
   useEffect(() => {
-    getBookings();
+    crudApi('getBookings', setLoading, setBookings);
   }, []);
 
   const closeAlert = () => {
     setAlertMessage("hidden");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (data) => {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
     // chamar a função para armazenar a reserva
+    crudApi('createBookings', setLoading, setBookings, data, setAlertMessage);
   };
 
   return (

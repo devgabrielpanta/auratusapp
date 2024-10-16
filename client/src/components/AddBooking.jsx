@@ -73,7 +73,7 @@ export default function BookingsHeader({
 
       <Divider />
 
-      <FormContainer onSuccess={handleSubmit}>
+      <FormContainer onSuccess={data => handleSubmit(data)}>
         <TextFieldElement
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="guests"
