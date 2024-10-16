@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
-import crudApi from "./api/crudApi";
+import { getBookings, addBooking } from "./services/bookings";
 
 const drawerWidth = 400;
 const navHeight = 70;
@@ -15,7 +15,12 @@ export default function App() {
   const [alertMessage, setAlertMessage] = useState("hidden");
 
   useEffect(() => {
-    crudApi('getBookings', setLoading, setBookings);
+    getBookings()
+      .then((data) => {
+        setBookings(data);
+        setLoading(false);
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   const closeAlert = () => {
@@ -26,7 +31,7 @@ export default function App() {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
     // chamar a função para armazenar a reserva
-    crudApi('createBookings', setLoading, setBookings, data, setAlertMessage);
+    addBooking(data);
   };
 
   return (
