@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
+import { getBookings } from "./services/bookings";
 
 const drawerWidth = 400;
 const navHeight = 70;
@@ -13,22 +14,13 @@ export default function App() {
   const [bookings, setBookings] = useState([]);
   const [alertMessage, setAlertMessage] = useState("hidden");
 
-  const getBookings = async () => {
-    const serverUrl = "http://localhost:3001/bookings"; // colocar na variável de ambientes
-    try {
-      const response = await fetch(serverUrl, {
-        method: "GET",
-      });
-      const data = await response.json();
-      setBookings([...data]); //spread operator
-      setLoading(false);
-    } catch (error) {
-      console.log('erro ao buscar lista de reservas');
-    };  
-  };
-
   useEffect(() => {
-    getBookings();
+    getBookings()
+      .then((data) => {
+        setBookings(data);
+        setLoading(false);
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   const closeAlert = () => {
