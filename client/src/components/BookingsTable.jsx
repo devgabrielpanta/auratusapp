@@ -6,6 +6,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import LanguageIcon from '@mui/icons-material/Language';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { makeStyles } from "@mui/styles";
 
 const renderedSource = (props) => {
   const sourceProp = props.formattedValue;
@@ -25,6 +26,24 @@ const renderedSource = (props) => {
   } else {
     return <QuestionMarkIcon/>
   }
+};
+
+const rowStyles = makeStyles({
+  soft: {
+    backgroundColor: "#eeecffab",
+    fontSize: "14px"
+  },
+  strong: {
+    backgroundColor: "#004aff1f",
+    fontSize: "16px"
+  }
+});
+
+const getRowSpacing = (params) => {
+  return {
+    top: params.isFirstVisible ? 0 : 5,
+    bottom: params.isLastVisible ? 0 : 5,
+  };
 };
 
 const columns = [
@@ -58,6 +77,8 @@ export default function BookingsTable({
     booking_source: row.booking_source,
   }));
 
+  const classes = rowStyles();
+
   if (loading) {
     return (
       <Paper
@@ -78,6 +99,9 @@ export default function BookingsTable({
           localeText={{
             noRowsLabel: "Loading",
           }}
+          getRowClassName={(params) => {
+            return params.row.booking_source === 'espontaneo' ? classes.soft : "";
+          }}
         />
       </Paper>
     );
@@ -97,6 +121,10 @@ export default function BookingsTable({
         rows={mappedRows}
         initialStateBookings={{ pagination: { paginationModel } }}
         stickyHeader
+        getRowClassName={(params) => {
+          return params.row.booking_source === 'espontaneo' ? classes.soft : classes.strong;
+        }}
+        getRowSpacing={getRowSpacing}
         sx={{ zIndex: 0 }}
       />
     </Paper>
