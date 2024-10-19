@@ -23,8 +23,8 @@ const create = (bookingData) => {
         return;
       }
       const query = `INSERT INTO ${dbName} 
-      (guest_name, guest_count, booking_time, guest_phone, guest_mail, booking_status, booking_source) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)`;
+      (guest_name, guest_count, booking_time, guest_phone, guest_mail, booking_status, booking_source, service)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
       const values = Object.values(bookingData);
 
       db.query(query, values, (err, result) => {
@@ -70,7 +70,7 @@ const update = (id, bookingData) => {
       }
 
       const setFields =
-      "guest_name = ?, guest_count = ?, booking_time = ?, guest_phone = ?, guest_mail = ?, booking_status = ?, booking_source = ?";
+      "guest_name = ?, guest_count = ?, booking_time = ?, guest_phone = ?, guest_mail = ?, booking_status = ?, booking_source = ?, service = ?";
       const query = `UPDATE ${dbName} SET ${setFields} WHERE id = ?`;
       const values = [...Object.values(bookingData), id];
 
