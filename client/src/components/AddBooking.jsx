@@ -33,6 +33,8 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import Slider from '@mui/material/Slider';
 import Grid from '@mui/material/Grid2';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 
 export default function AddBooking({
   bookingsWidth,
@@ -251,7 +253,7 @@ export default function AddBooking({
               <InstagramIcon/>
             </ToggleButton>
           </ToggleButtonGroup>
-          <Input inputProps={{style: { textTransform: "uppercase", fontSize: 14 }}} name="source" value={bookingSource} required/>
+          <Input name="source" value={bookingSource} inputProps={{style: { textTransform: "uppercase", fontSize: 12 }}} required/>
         </FormControl>
 
         <Box sx={{
@@ -300,57 +302,68 @@ export default function AddBooking({
         </Grid>
       </Box>
 
-        {/*      
-        <TextField
-          sx={{ marginLeft: 8, marginBottom: 1 }}
-          name="guests"
-          label="Guests"
-          value={bookingGuestCount}
-          placeholder="Número de guests"
-          onChange={ (params) => {setBookingGuestCount(params.formattedValue)} }
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-          required
-        />
-        */}
-        
+        <Box sx={{
+          marginLeft: 8,
+          display:"flex",
+          flexDirection: "column",
+        }}
+        >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDateTimePicker
-              sx={{ marginLeft: 8, marginBottom: 1 }}
-              label="Horário"
-              views={["day", "month", "hours", "minutes"]}
-              format="DD/MM/YYYY HH:mm"
-              ampm={false} // Define formato de 24 horas
-              viewRenderers={{
-                hours: renderTimeViewClock,
-                minutes: renderTimeViewClock,
-              }}
+          <Box sx={{
+          display:"inline-flex",
+          gap: 1,
+          }}
+          >
+            <DatePicker
+              sx={{ width: 150 }}
+              label="Data"
               value={bookingTime}
-              onChange={ (date) => {setBookingTime(date)} }
+              onChange={ (newDate) => {
+                setBookingTime(newDate.hour(bookingTime.hour()).minute(bookingTime.minute()));
+              }}
+              format="DD/MM/YYYY"
+              disablePast
             />
+            <DesktopTimePicker
+              sx={{ width: 120 }}
+              label="Hora"
+              value={bookingTime}
+              views={["hours", "minutes"]}
+              ampm={false}
+              onChange={ (newTime) => {
+                const bookingYear = dayjs(bookingTime).get("year");
+                const bookingMonth = dayjs(bookingTime).get("month");
+                const bookingDay = dayjs(bookingTime).get("date");
+                const bookingHour = dayjs(newTime).get("hour");
+                const bookingMinute = dayjs(newTime).get("minute");
+                setBookingTime(dayjs().year(bookingYear).month(bookingMonth).date(bookingDay).hour(bookingHour).minute(bookingMinute));
+              }}
+            />
+          </Box>
         </LocalizationProvider>
+        <Input name="input-booking_time" value={dayjs(bookingTime).format("DD/MM/YYYY HH:mm")} hidden/>
+        </Box>
         
         <Box sx={{
           marginLeft: 8,
           display:"inline-flex",
           alignItems: "center",
         }}>
-        <InputLabel sx={{marginRight: 1}}>Serviço:</InputLabel>
+        <InputLabel sx={{marginRight: 1, fontSize: 14, color: "grey.500" }}>Serviço:</InputLabel>
         <Input
+          name="input-service"
           sx={{padding: 0, opacity: 0.8}}
           value={checkService()}
           disable
           disableUnderline
+          inputProps={{style: { fontSize: 14, color: "grey" }}}
         />
         </Box>
 
-        <Divider sx={{ height: 50 }} variant="middle" />
+        <Divider sx={{ height: 30 }} variant="middle" />
 
         <TextField
-          sx={{ marginLeft: 8, marginBottom: 1 }}
+          sx={{ marginLeft: 8, marginBottom: 2 }}
           name="nome"
           label="Nome"
           value={bookingGuestName}
@@ -364,7 +377,7 @@ export default function AddBooking({
           required
         />
         <TextField
-          sx={{ marginLeft: 8, marginBottom: 1 }}
+          sx={{ marginLeft: 8, marginBottom: 2 }}
           name="phone"
           label="Telemóvel"
           value={bookingGuestPhone}
