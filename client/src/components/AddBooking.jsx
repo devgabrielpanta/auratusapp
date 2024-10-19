@@ -3,9 +3,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Divider from "@mui/material/Divider";
 import {
   FormContainer,
-  TextFieldElement,
   Controller,
 } from "react-hook-form-mui";
+import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
@@ -48,6 +48,46 @@ export default function BookingsHeader({
         <Button sx={{width: "100px"}}variant="outlined">Voltar</Button>
       </Box>
     : ""
+  };
+
+  const UpdateBookingsField = () => {
+    const [statusEditing, setStatusEditing] = useState("reservado");
+
+    const handleStatusEditing = (event) => {
+      setStatusEditing(event.target.value);
+    };
+
+    return drawerAction === "updateBookings" ?
+        <Box
+        sx={{marginLeft: 8, display:"inline-flex"}}
+      >
+        <TextField
+          sx={{width: "60px" }}
+          id="id"
+          name="id"
+          defaultValue="1000"
+          variant="filled"
+          inputProps={{ readOnly: true }}
+          //hidden => ocultar após a validação do formSubmission
+        />
+        
+        <FormControl sx={{ marginLeft: 8 }}>
+          <Select
+            id="status"
+            value={statusEditing} //mudar dinamicamente conforme a reserva em edição
+            onChange={handleStatusEditing}
+          >
+            <MenuItem value={"reservado"}>reservado</MenuItem>
+            <MenuItem value={"cancelado"}>cancelado</MenuItem>          
+            <MenuItem value={"noshown"}>noshown</MenuItem>
+            <MenuItem value={"esperando"}>esperando</MenuItem>
+            <MenuItem value={"servindo"}>servindo</MenuItem>
+            <MenuItem value={"finalizado"}>finalizado</MenuItem>
+          </Select>
+          <FormHelperText>Serviço</FormHelperText>
+        </FormControl>
+      </Box>
+    : "";
   };
 
   const DrawerButton = () => {
@@ -117,7 +157,10 @@ export default function BookingsHeader({
       <Divider />
 
       <FormContainer onSuccess={data => handleSubmit(data)}>
-        <TextFieldElement
+       
+        <UpdateBookingsField/>
+
+        <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="guests"
           label="Guests"
@@ -164,19 +207,19 @@ export default function BookingsHeader({
 
         <Divider sx={{ height: 30 }} variant="middle" />
 
-        <TextFieldElement
+        <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="nome"
           label="Nome"
           required
         />
-        <TextFieldElement
+        <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="phone"
           label="Telemóvel"
           required
         />
-        <TextFieldElement
+        <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="email"
           label="Email"
