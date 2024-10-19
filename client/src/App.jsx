@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
-import { getBookings } from "./services/bookings";
+import { getBookings, addBooking } from "./services/bookings";
 
 const drawerWidth = 400;
 const navHeight = 70;
@@ -27,10 +27,15 @@ export default function App() {
     setAlertMessage("hidden");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (data) => {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
     // chamar a função para armazenar a reserva
+    addBooking(data)
+      .then((data) => {
+        console.log(data);
+        //Adicionar callback para setar loading como false se for adicionada com sucesso e exibir o alert no front
+      });
   };
 
   return (
