@@ -24,6 +24,12 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
+import PhoneIcon from '@mui/icons-material/Phone';
+import LanguageIcon from '@mui/icons-material/Language';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
 export default function AddBooking({
   bookingsWidth,
@@ -65,7 +71,7 @@ export default function AddBooking({
     "booking_time": "2024-01-30 23:13",
     "guest_phone": "+351 927 540 927",
     "guest_mail": "emaildoguest@gmail.com",
-    "source": "calls"
+    "source": "espontaneo"
   }]);
 
   const checkService = () => {
@@ -197,7 +203,6 @@ export default function AddBooking({
       <Box
         sx={{
           marginLeft: 8,
-          marginBottom: 3,
           fontWeight: 700,
           fontSize: "23px"
         }}
@@ -205,11 +210,46 @@ export default function AddBooking({
         {drawerAction === "createBookings" ? "Adicionar Reserva" : "Editar Reserva"}
       </Box>
 
-      <Divider />
+      <Divider sx={{ ml: 8, mb: 3, border: 1, borderColor: "primary.main", opacity: 1, width: "70%", alignSelf: "lef" }} />
 
       <FormContainer onSuccess={data => handleSubmit(data)}>
        
         <UpdateBookingsField/>
+
+        <FormControl
+          sx={{
+            ml: 8,
+            mb: 3,
+            border: 1,
+            borderRadius: 2,
+            borderColor: "grey.400",
+            padding: 1
+          }}
+        >
+          <Typography sx={{ fontSize: 14, opacity: 0.8 }}>Origem da reserva:</Typography>
+          <ToggleButtonGroup
+          sx={{ gap: 1 }}
+          color="primary"
+          exclusive
+          value={bookingSource}
+          onChange={(event, newValue) => {setBookingSource(newValue)}}
+          defaultValue="calls"
+          >
+            <ToggleButton sx={{ boxShadow:2 }}value="calls">
+              <PhoneIcon/>
+            </ToggleButton>
+            <ToggleButton sx={{ boxShadow:2 }}value="espontaneo">
+              <DirectionsWalkIcon/>
+            </ToggleButton>
+            <ToggleButton sx={{ boxShadow:2 }}value="site">
+              <LanguageIcon/>
+            </ToggleButton>
+            <ToggleButton sx={{ boxShadow:2 }}value="social">
+              <InstagramIcon/>
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <Input inputProps={{style: { textTransform: "uppercase", fontSize: 14 }}} name="source" value={bookingSource} required/>
+        </FormControl>
 
         <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
@@ -256,7 +296,7 @@ export default function AddBooking({
         />
         </Box>
 
-        <Divider sx={{ height: 30 }} variant="middle" />
+        <Divider sx={{ height: 50 }} variant="middle" />
 
         <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
