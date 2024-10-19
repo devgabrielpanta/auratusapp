@@ -30,6 +30,9 @@ import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import PhoneIcon from '@mui/icons-material/Phone';
 import LanguageIcon from '@mui/icons-material/Language';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import Slider from '@mui/material/Slider';
+import Grid from '@mui/material/Grid2';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 export default function AddBooking({
   bookingsWidth,
@@ -43,7 +46,7 @@ export default function AddBooking({
   const [bookingId, setBookingId] = useState("");
   const [bookingStatus, setBookingStatus] = useState("");
   const [bookingGuestName, setBookingGuestName] = useState("");
-  const [bookingGuestCount, setBookingGuestCount] = useState("");
+  const [bookingGuestCount, setBookingGuestCount] = useState(2);
   const [bookingTime, setBookingTime] = useState(dayjs());
   const [bookingGuestPhone, setBookingGuestPhone] = useState("");
   const [bookingGuestMail, setBookingGuestMail] = useState("");
@@ -251,6 +254,53 @@ export default function AddBooking({
           <Input inputProps={{style: { textTransform: "uppercase", fontSize: 14 }}} name="source" value={bookingSource} required/>
         </FormControl>
 
+        <Box sx={{
+            ml: 8,
+            mb: 3,
+            border: 1,
+            borderRadius: 2,
+            borderColor: "grey.400",
+            padding: 1,
+            width: 260
+        }}
+        >
+        <Typography sx={{ fontSize: 14, opacity: 0.8 }} id="guest-label">Guests</Typography>
+        <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+          <Grid item>
+           <GroupsIcon/>
+          </Grid>
+          <Grid item>
+            <Slider
+              sx={{ width: 130 }}
+              min={1}
+              max={40}
+              value={bookingGuestCount}
+              onChange={(event, newValue) => {setBookingGuestCount(newValue)}}
+              aria-labelledby="guest-label"
+            />
+          </Grid>
+          <Grid item>
+            <Input
+              name="input-guestCount"
+              value={bookingGuestCount}
+              size="small"
+              onChange={(event) => { setBookingGuestCount(event.target.value) }}
+              //onBlur={handleBlur}
+              inputProps={{
+                step: 1,
+                min: 0,
+                max: 40,
+                type: 'number',
+                'aria-labelledby': 'guest-label',
+                style: { width: 40 }
+              }}
+              required
+            />
+          </Grid>
+        </Grid>
+      </Box>
+
+        {/*      
         <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="guests"
@@ -265,6 +315,7 @@ export default function AddBooking({
           }}
           required
         />
+        */}
         
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDateTimePicker
