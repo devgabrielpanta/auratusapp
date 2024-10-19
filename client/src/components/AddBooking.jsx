@@ -30,6 +30,7 @@ export default function BookingsHeader({
   closeParams,
 }) {
 
+  const [drawerAction, setDrawerAction] = useState('createBookings');
   const [bookingTime, setBookingTime] = useState(dayjs(new Date()));
 
   const checkService = () => {
