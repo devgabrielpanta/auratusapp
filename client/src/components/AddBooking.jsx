@@ -8,14 +8,20 @@ import {
 } from "react-hook-form-mui";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import Button from "@mui/material/Button";
 import dayjs from "dayjs";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
+import { useState } from "react";
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 export default function BookingsHeader({
   bookingsWidth,
@@ -23,6 +29,14 @@ export default function BookingsHeader({
   alertParams,
   closeParams,
 }) {
+
+  const [bookingTime, setBookingTime] = useState(dayjs(new Date()));
+
+  const checkService = () => {
+    const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
+      return dayjs(bookingTime).isBefore(breakService) ? 0 : 1
+  };
+
   return (
     <Drawer
       sx={{
@@ -55,7 +69,7 @@ export default function BookingsHeader({
 
       <Divider />
 
-      <FormContainer onSuccess={handleSubmit}>
+      <FormContainer onSuccess={data => handleSubmit(data)}>
         <TextFieldElement
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="guests"
@@ -65,40 +79,22 @@ export default function BookingsHeader({
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box sx={{ marginLeft: 8, marginBottom: 1 }}>
             <Controller
-              name="date"
+              name="booking_time"
               render={({ field: { onChange, value } }) => (
-                <DatePicker
-                  label="Data"
-                  value={value ? dayjs(value) : null} // Converte o valor em dayjs se existir
-                  onChange={(date) => {
-                    // Formata a data para 'YYYY-MM-DD' e a passa para o onChange do Controller
-                    onChange(date ? dayjs(date).format("YYYY-MM-DD") : null);
-                  }}
-                  slotProps={{ textField: { variant: "outlined" } }}
-                />
-              )}
-            />
-          </Box>
-          <Box sx={{ marginLeft: 8 }}>
-            <Controller
-              name="time"
-              render={({ field: { onChange, value } }) => (
-                <TimePicker
+                <DesktopDateTimePicker
                   label="Horário"
-                  value={value ? dayjs(value) : null} // Verifica se o valor é válido antes de usar dayjs
-                  onChange={(time) => {
-                    // Verifica se o valor de time não é nulo e formatado corretamente
-                    if (time && dayjs(time).isValid()) {
-                      onChange(dayjs(time).format("HH:mm:ss")); // Formata para o formato 'HH:mm:ss'
-                    } else {
-                      onChange(null); // Lida com o caso de time ser inválido ou null
-                    }
-                  }}
-                  views={["hours", "minutes"]}
+                  views={["day", "month", "hours", "minutes"]}
+                  format="DD/MM/YYYY HH:mm"
                   ampm={false} // Define formato de 24 horas
+                  defaultValue={bookingTime}
                   viewRenderers={{
                     hours: renderTimeViewClock,
                     minutes: renderTimeViewClock,
+                  }}
+                  onChange={(date) => {
+                    const formattedDate = date ? dayjs(date).format("YYYY-MM-DD HH:mm") : null;
+                    onChange(formattedDate); // Atualiza o valor no Controller
+                    setBookingTime(formattedDate); // Atualiza o state
                   }}
                   slotProps={{ textField: { variant: "outlined" } }}
                 />
@@ -106,6 +102,18 @@ export default function BookingsHeader({
             />
           </Box>
         </LocalizationProvider>
+
+        <FormControl sx={{ marginLeft: 8 }}>
+        <Select
+          id="service"
+          value={checkService()}
+          inputProps={{ readOnly: true }}
+        >
+          <MenuItem value={0}><WbSunnyIcon/> Almoço</MenuItem>
+          <MenuItem value={1}><NightlightRoundIcon/> Janta</MenuItem>
+        </Select>
+        <FormHelperText>Serviço</FormHelperText>
+      </FormControl>
 
         <Divider sx={{ height: 30 }} variant="middle" />
 
