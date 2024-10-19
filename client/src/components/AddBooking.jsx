@@ -22,8 +22,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
 
-export default function BookingsHeader({
+export default function AddBooking({
   bookingsWidth,
   handleSubmit,
   alertParams,
@@ -31,12 +33,57 @@ export default function BookingsHeader({
 }) {
 
   const [drawerAction, setDrawerAction] = useState("createBookings");
-  const [bookingTime, setBookingTime] = useState(dayjs(new Date()));
+  //Booking Default Values
+  const [bookingId, setBookingId] = useState("");
+  const [bookingStatus, setBookingStatus] = useState("");
+  const [bookingGuestName, setBookingGuestName] = useState("");
+  const [bookingGuestCount, setBookingGuestCount] = useState("");
+  const [bookingTime, setBookingTime] = useState(dayjs());
+  const [bookingGuestPhone, setBookingGuestPhone] = useState("");
+  const [bookingGuestMail, setBookingGuestMail] = useState("");
+  const [bookingSource, setBookingSource] = useState("");
+
+  const updateBookingsData = (bookingData) => {
+    const currentlyData = JSON.parse(bookingData)[0];
+    console.log(`Atualizando a reserva: ${currentlyData.guest_name}`)
+    setBookingId(currentlyData.id);
+    setBookingStatus(currentlyData.status);
+    setBookingGuestName(currentlyData.guest_name);
+    setBookingGuestCount(currentlyData.guest_count);
+    setBookingTime(dayjs(currentlyData.booking_time));
+    setBookingGuestPhone(currentlyData.guest_phone);
+    setBookingGuestMail(currentlyData.guest_mail);
+    setBookingSource(currentlyData.source);
+    setDrawerAction("updateBookings");
+  };
+
+  const bookingTestData = JSON.stringify([{
+    "id": 123,
+    "status": "reservado",
+    "guest_name": "Teste updateBookings",
+    "guest_count": 3,
+    "booking_time": "2024-01-30 23:13",
+    "guest_phone": "+351 927 540 927",
+    "guest_mail": "emaildoguest@gmail.com",
+    "source": "calls"
+  }]);
 
   const checkService = () => {
     const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
-      return dayjs(bookingTime).isBefore(breakService) ? 0 : 1
+      return dayjs(bookingTime).isBefore(breakService) ? "Almoço" : "Jantar"
   };
+
+  const clearUpdateDrawer = () => {
+    setBookingId("");
+    setBookingStatus("");
+    setBookingGuestName("");
+    setBookingGuestCount("");
+    setBookingTime(dayjs());
+    setBookingGuestPhone("");
+    setBookingGuestMail("");
+    setBookingSource("");
+    setDrawerAction("createBookings");
+  }
 
   const ButtonVoltar = () => {
     return drawerAction === "updateBookings" ?
@@ -45,37 +92,42 @@ export default function BookingsHeader({
         justifyContent: "right",
         mr: 8
       }}>
-        <Button sx={{width: "100px"}}variant="outlined">Voltar</Button>
+        <Button sx={{width: "100px"}} variant="outlined" onClick={() => {clearUpdateDrawer()}}>Voltar</Button>
       </Box>
     : ""
   };
 
   const UpdateBookingsField = () => {
-    const [statusEditing, setStatusEditing] = useState("reservado");
 
     const handleStatusEditing = (event) => {
-      setStatusEditing(event.target.value);
+      setBookingStatus(event.target.value);
     };
 
     return drawerAction === "updateBookings" ?
         <Box
-        sx={{marginLeft: 8, display:"inline-flex"}}
+        sx={{marginLeft: 8, display:"inline-flex", marginBottom: 2 }}
       >
         <TextField
-          sx={{width: "60px" }}
+          sx={{width: "60px"}}
           id="id"
           name="id"
-          defaultValue="1000"
+          value={bookingId}
           variant="filled"
-          inputProps={{ readOnly: true }}
-          //hidden => ocultar após a validação do formSubmission
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+          label="ID:"
         />
         
         <FormControl sx={{ marginLeft: 8 }}>
           <Select
             id="status"
-            value={statusEditing} //mudar dinamicamente conforme a reserva em edição
+            value={bookingStatus}
             onChange={handleStatusEditing}
+            label="Status:"
+            InputLabelProps={{ shrink: true }}
           >
             <MenuItem value={"reservado"}>reservado</MenuItem>
             <MenuItem value={"cancelado"}>cancelado</MenuItem>          
@@ -84,7 +136,6 @@ export default function BookingsHeader({
             <MenuItem value={"servindo"}>servindo</MenuItem>
             <MenuItem value={"finalizado"}>finalizado</MenuItem>
           </Select>
-          <FormHelperText>Serviço</FormHelperText>
         </FormControl>
       </Box>
     : "";
@@ -136,7 +187,7 @@ export default function BookingsHeader({
       anchor="left"
     >
       {/*button adicionado apenas para fazer os testes de desenvolvimento*/}
-      <Button sx={{width: "100px"}}variant="contained" onClick={() => {setDrawerAction("updateBookings")}}>Editar Reserva</Button>
+      <Button sx={{width: "100px"}}variant="contained" onClick={ () => {updateBookingsData(bookingTestData)} }>Editar Reserva</Button>
       <Toolbar />
       
       <ButtonVoltar/>
@@ -164,46 +215,46 @@ export default function BookingsHeader({
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="guests"
           label="Guests"
+          value={bookingGuestCount}
+          placeholder="Número de guests"
+          onChange={ (params) => {setBookingGuestCount(params.formattedValue)} }
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
           required
         />
+        
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Box sx={{ marginLeft: 8, marginBottom: 1 }}>
-            <Controller
-              name="booking_time"
-              render={({ field: { onChange, value } }) => (
-                <DesktopDateTimePicker
-                  label="Horário"
-                  views={["day", "month", "hours", "minutes"]}
-                  format="DD/MM/YYYY HH:mm"
-                  ampm={false} // Define formato de 24 horas
-                  defaultValue={bookingTime}
-                  viewRenderers={{
-                    hours: renderTimeViewClock,
-                    minutes: renderTimeViewClock,
-                  }}
-                  onChange={(date) => {
-                    const formattedDate = date ? dayjs(date).format("YYYY-MM-DD HH:mm") : null;
-                    onChange(formattedDate); // Atualiza o valor no Controller
-                    setBookingTime(formattedDate); // Atualiza o state
-                  }}
-                  slotProps={{ textField: { variant: "outlined" } }}
-                />
-              )}
+            <DesktopDateTimePicker
+              sx={{ marginLeft: 8, marginBottom: 1 }}
+              label="Horário"
+              views={["day", "month", "hours", "minutes"]}
+              format="DD/MM/YYYY HH:mm"
+              ampm={false} // Define formato de 24 horas
+              viewRenderers={{
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+              }}
+              value={bookingTime}
+              onChange={ (date) => {setBookingTime(date)} }
             />
-          </Box>
         </LocalizationProvider>
-
-        <FormControl sx={{ marginLeft: 8 }}>
-        <Select
-          id="service"
+        
+        <Box sx={{
+          marginLeft: 8,
+          display:"inline-flex",
+          alignItems: "center",
+        }}>
+        <InputLabel sx={{marginRight: 1}}>Serviço:</InputLabel>
+        <Input
+          sx={{padding: 0, opacity: 0.8}}
           value={checkService()}
-          inputProps={{ readOnly: true }}
-        >
-          <MenuItem value={0}><WbSunnyIcon/> Almoço</MenuItem>
-          <MenuItem value={1}><NightlightRoundIcon/> Janta</MenuItem>
-        </Select>
-        <FormHelperText>Serviço</FormHelperText>
-      </FormControl>
+          disable
+          disableUnderline
+        />
+        </Box>
 
         <Divider sx={{ height: 30 }} variant="middle" />
 
@@ -211,18 +262,42 @@ export default function BookingsHeader({
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="nome"
           label="Nome"
+          value={bookingGuestName}
+          onChange={ (params) => {setBookingGuestName(params.formattedValue)} }
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+          placeholder="Nome e apelido"
           required
         />
         <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="phone"
           label="Telemóvel"
+          value={bookingGuestPhone}
+          onChange={ (params) => {setBookingGuestPhone(params.formattedValue)} }
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+          placeholder="+351 927 540 803"
           required
         />
         <TextField
           sx={{ marginLeft: 8, marginBottom: 1 }}
           name="email"
           label="Email"
+          value={bookingGuestMail}
+          onChange={ (params) => {setBookingGuestMail(params.formattedValue)} }
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+          placeholder="emaildoguest@gmail.com"
         />
 
       <DrawerButton/>
