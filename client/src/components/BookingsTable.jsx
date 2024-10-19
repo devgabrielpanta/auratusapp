@@ -7,6 +7,9 @@ import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import LanguageIcon from '@mui/icons-material/Language';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { makeStyles } from "@mui/styles";
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
 const renderedSource = (props) => {
   const sourceProp = props.formattedValue;
@@ -35,6 +38,20 @@ const getRowSpacing = (params) => {
   };
 };
 
+const renderedService = (props) => {
+  const serviceProp = props.formattedValue;
+  console.log(serviceProp);
+  if(serviceProp === "almoco") {
+    return <span><WbSunnyIcon /> Almoço</span>; //sx={{color:"black"}}
+
+  } else if (serviceProp === "janta") {
+    return <span><NightlightRoundIcon /> Janta</span>; //color="primary"
+  
+  } else {
+    return <QuestionMarkIcon/>
+  }
+};
+
 const columns = [
   { field: "id", headerName: "ID", width: 20 },
   { field: "guest_name", headerName: "Guest Name", width: 200 },
@@ -44,6 +61,7 @@ const columns = [
   { field: "guest_mail", headerName: "Email", width: 200 },
   { field: "booking_status", headerName: "Status", width: 200 },
   { field: "booking_source", headerName: "Source", width: 70, renderCell: renderedSource},
+  { field: "service", headerName: "Serviço", width: 100, renderCell: renderedService },
 ];
 
 const paginationModel = { page: 0, pageSize: 50 };
@@ -64,6 +82,7 @@ export default function BookingsTable({
     guest_mail: row.guest_mail,
     booking_status: row.booking_status,
     booking_source: row.booking_source,
+    service: row.service,
   }));
 
   const classes = rowStyles();
