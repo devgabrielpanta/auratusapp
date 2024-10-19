@@ -53,6 +53,8 @@ export default function BookingsHeader({
       variant="permanent"
       anchor="left"
     >
+      {/*button adicionado apenas para fazer os testes de desenvolvimento*/}
+      <Button sx={{width: "100px"}}variant="contained" onClick={() => {setDrawerAction("updateBookings")}}>Editar Reserva</Button>
       <Toolbar />
       <Divider sx={{ height: 30 }} />
       <Typography
@@ -65,7 +67,7 @@ export default function BookingsHeader({
           fontWeight: 700,
         }}
       >
-        Adicionar Reserva
+        {drawerAction === "createBookings" ? "Adicionar Reserva" : "Editar Reserva"}
       </Typography>
 
       <Divider />
