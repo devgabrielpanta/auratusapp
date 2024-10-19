@@ -38,6 +38,36 @@ export default function BookingsHeader({
       return dayjs(bookingTime).isBefore(breakService) ? 0 : 1
   };
 
+  const DrawerButton = () => {
+      return drawerAction === "createBookings" ?
+        <Button
+        sx={{ marginLeft: 8, marginTop: 2 }}
+        type="submit"
+        variant="contained"
+        >
+        Adicionar Reserva
+        </Button>
+      :
+        <Box sx={{display: "inline-flex"}}>
+          <Button
+            sx={{ marginLeft: 2, marginTop: 2, fontSize: "12px" }}
+            type="submit"
+            variant="contained"
+            color="success"
+          >
+            Atualizar Reserva
+          </Button>
+          <Button
+            sx={{ marginLeft: 2, marginTop: 2, fontSize: "12px" }}
+            type="submit"
+            variant="contained"
+            color="error"
+          >
+            Deletar Reserva
+          </Button>
+        </Box>
+  };
+
   return (
     <Drawer
       sx={{
@@ -138,15 +168,8 @@ export default function BookingsHeader({
           label="Email"
         />
 
-        <div>
-          <Button
-            sx={{ marginLeft: 8, marginTop: 2 }}
-            type="submit"
-            variant="contained"
-          >
-            Adicionar Reserva
-          </Button>
-        </div>
+      <DrawerButton/>
+
       </FormContainer>
       {alertParams === "success" && (
         <Alert severity="success" onClose={closeParams}>
