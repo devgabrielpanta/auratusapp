@@ -34,11 +34,7 @@ export default function BookingsHeader({
 
   const checkService = () => {
     const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
-    if (dayjs(bookingTime).isBefore(breakService)) {
-      return 0;
-    } else {
-      return 1;
-    };
+      return dayjs(bookingTime).isBefore(breakService) ? 0 : 1
   };
 
   return (
