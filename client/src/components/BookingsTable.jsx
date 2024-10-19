@@ -10,22 +10,11 @@ import { makeStyles } from "@mui/styles";
 
 const renderedSource = (props) => {
   const sourceProp = props.formattedValue;
-  console.log(sourceProp);
-  if(sourceProp === "espontaneo") {
-    return <DirectionsWalkIcon sx={{color:"black"}}/>;
-
-  } else if (sourceProp === "calls") {
-    return <PhoneIcon color="primary" />;
-
-  } else if (sourceProp === "site") {
-    return <LanguageIcon color="primary" />;
-
-  } else if (sourceProp === "social") {
-    return <InstagramIcon color="primary" />;
-
-  } else {
-    return <QuestionMarkIcon/>
-  }
+  return sourceProp === "espontaneo" ? <DirectionsWalkIcon sx={{color:"black"}}/>
+    : sourceProp === "calls" ? <PhoneIcon color="primary" />
+    : sourceProp === "site" ? <LanguageIcon color="primary" />
+    : sourceProp === "social" ? <InstagramIcon color="primary" />
+    : <QuestionMarkIcon/>;
 };
 
 const rowStyles = makeStyles({
