@@ -31,7 +31,11 @@ export default function App() {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
     // chamar a função para armazenar a reserva
-    addBooking(data);
+    addBooking(data)
+      .then((data) => {
+        console.log(data);
+        //Adicionar callback para setar loading como false se for adicionada com sucesso e exibir o alert no front
+      });
   };
 
   return (
