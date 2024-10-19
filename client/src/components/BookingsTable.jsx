@@ -9,7 +9,6 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import { makeStyles } from "@mui/styles";
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -96,7 +95,6 @@ const columns = [
   { field: "booking_time", headerName: "Horário", width: 100 },
   { field: "guest_phone", headerName: "Telemóvel", width: 150 },
   { field: "guest_mail", headerName: "Email", width: 200 },
-  { field: "booking_status", headerName: "Status", width: 200 },
   { field: "booking_source", headerName: "Source", width: 70, renderCell: renderedSource},
   { field: "service", headerName: "Serviço", width: 100, renderCell: renderedService },
 ];
