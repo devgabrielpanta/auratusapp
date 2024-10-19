@@ -30,12 +30,24 @@ export default function BookingsHeader({
   closeParams,
 }) {
 
-  const [drawerAction, setDrawerAction] = useState('createBookings');
+  const [drawerAction, setDrawerAction] = useState("createBookings");
   const [bookingTime, setBookingTime] = useState(dayjs(new Date()));
 
   const checkService = () => {
     const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
       return dayjs(bookingTime).isBefore(breakService) ? 0 : 1
+  };
+
+  const ButtonVoltar = () => {
+    return drawerAction === "updateBookings" ?
+      <Box sx={{
+        display: "flex",
+        justifyContent: "right",
+        mr: 8
+      }}>
+        <Button sx={{width: "100px"}}variant="outlined">Voltar</Button>
+      </Box>
+    : ""
   };
 
   const DrawerButton = () => {
@@ -86,19 +98,21 @@ export default function BookingsHeader({
       {/*button adicionado apenas para fazer os testes de desenvolvimento*/}
       <Button sx={{width: "100px"}}variant="contained" onClick={() => {setDrawerAction("updateBookings")}}>Editar Reserva</Button>
       <Toolbar />
-      <Divider sx={{ height: 30 }} />
-      <Typography
-        variant="h6"
-        noWrap
-        component="div"
+      
+      <ButtonVoltar/>
+          
+      <Divider sx={{ height: 30}}/>
+
+      <Box
         sx={{
           marginLeft: 8,
           marginBottom: 3,
           fontWeight: 700,
+          fontSize: "23px"
         }}
       >
         {drawerAction === "createBookings" ? "Adicionar Reserva" : "Editar Reserva"}
-      </Typography>
+      </Box>
 
       <Divider />
 
