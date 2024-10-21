@@ -42,16 +42,13 @@ import { fontWeight } from "@mui/system";
 
 export default function AddBooking({
   bookingsWidth,
-  handleDrawer,
+  handleBookings,
   alertParams,
   closeParams,
 }) {
 
-  const { register, control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data); // Processa os dados do formulário
-  };
 
   const [drawerAction, setDrawerAction] = useState("createBookings");
   //Booking Default Values
@@ -196,10 +193,23 @@ export default function AddBooking({
             type="submit"
             variant="contained"
             color="error"
+            onClick={() => setDrawerAction("deleteBookings")}
           >
             Deletar Reserva
           </Button>
         </Box>
+  };
+
+  const handleDrawer = (data) => {
+    // adicionar regras de validação
+    const requestMethod = drawerAction;
+
+    if (requestMethod === "createBookings") {
+      data.status = "reservado";
+      console.log(data)
+      //handleBookings(data, requestMethod); FALTA AJUSTAR O SERVICE QUE NÃO ESTÁ ALTERANDO QUANDO MUDA A DATA ANTES DE FAZER O REQUEST
+    }
+    
   };
 
   return (
@@ -237,7 +247,7 @@ export default function AddBooking({
 
       <Divider sx={{ ml: 8, mb: 3, border: 1, borderColor: "primary.main", opacity: 1, width: "70%", alignSelf: "lef" }} />
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(handleDrawer)}>
        
         <UpdateBookingsField/>
 
