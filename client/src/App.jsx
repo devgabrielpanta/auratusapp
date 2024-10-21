@@ -27,7 +27,7 @@ export default function App() {
     setAlertMessage("hidden");
   };
 
-  const handleSubmit = (data) => {
+  const handleDrawer = (data) => {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
     // chamar a função para armazenar a reserva
@@ -45,7 +45,7 @@ export default function App() {
       <BookingsHeader headerWidth={drawerWidth} headerHeight={navHeight} />
       <AddBooking
         bookingsWidth={drawerWidth}
-        handleSubmit={handleSubmit}
+        handleDrawer={handleDrawer}
         alertParams={alertMessage}
         closeParams={closeAlert}
       />

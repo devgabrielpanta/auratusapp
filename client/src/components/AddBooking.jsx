@@ -1,9 +1,11 @@
 import Drawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
 import Divider from "@mui/material/Divider";
+import { useForm } from 'react-hook-form';
 import {
   FormContainer,
   Controller,
+  TextFieldElement
 } from "react-hook-form-mui";
 import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -36,13 +38,20 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { MuiTelInput } from 'mui-tel-input'
+import { fontWeight } from "@mui/system";
 
 export default function AddBooking({
   bookingsWidth,
-  handleSubmit,
+  handleDrawer,
   alertParams,
   closeParams,
 }) {
+
+  const { register, control, handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data); // Processa os dados do formulário
+  };
 
   const [drawerAction, setDrawerAction] = useState("createBookings");
   //Booking Default Values
@@ -111,44 +120,54 @@ export default function AddBooking({
 
   const UpdateBookingsField = () => {
 
-    const handleStatusEditing = (event) => {
-      setBookingStatus(event.target.value);
-    };
-
     return drawerAction === "updateBookings" ?
         <Box
         sx={{marginLeft: 8, display:"inline-flex", marginBottom: 2 }}
       >
-        <TextField
-          sx={{width: "60px"}}
-          id="id"
+        <Controller
           name="id"
-          value={bookingId}
-          variant="filled"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-          label="ID:"
+          defaultValue={bookingId}
+          control={control}
+          render={({ field: {value} }) =>
+            <TextField
+              sx={{width: "60px"}}
+              value={value}
+              variant="filled"
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+              label="ID:"
+            />
+          }
         />
+
         
-        <FormControl sx={{ marginLeft: 8 }}>
-          <Select
-            id="status"
-            value={bookingStatus}
-            onChange={handleStatusEditing}
-            label="Status:"
-            InputLabelProps={{ shrink: true }}
-          >
-            <MenuItem value={"reservado"}>reservado</MenuItem>
-            <MenuItem value={"cancelado"}>cancelado</MenuItem>          
-            <MenuItem value={"noshown"}>noshown</MenuItem>
-            <MenuItem value={"esperando"}>esperando</MenuItem>
-            <MenuItem value={"servindo"}>servindo</MenuItem>
-            <MenuItem value={"finalizado"}>finalizado</MenuItem>
-          </Select>
-        </FormControl>
+        <Box sx={{ marginLeft: 8 }}>
+          <Controller
+            name="status"
+            defaultValue={bookingStatus}
+            control={control}
+            render={({ field: {value, onChange} }) =>
+              <Select
+                id="status"
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+                label="Status:"
+                InputLabelProps={{ shrink: true }}
+              >
+                <MenuItem value={"reservado"}>reservado</MenuItem>
+                <MenuItem value={"cancelado"}>cancelado</MenuItem>          
+                <MenuItem value={"noshown"}>noshown</MenuItem>
+                <MenuItem value={"esperando"}>esperando</MenuItem>
+                <MenuItem value={"servindo"}>servindo</MenuItem>
+                <MenuItem value={"finalizado"}>finalizado</MenuItem>
+              </Select>
+            }
+          />
+
+        </Box>
       </Box>
     : "";
   };
@@ -218,44 +237,56 @@ export default function AddBooking({
 
       <Divider sx={{ ml: 8, mb: 3, border: 1, borderColor: "primary.main", opacity: 1, width: "70%", alignSelf: "lef" }} />
 
-      <FormContainer onSuccess={data => handleSubmit(data)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
        
         <UpdateBookingsField/>
 
-        <FormControl
+        <Box
           sx={{
             ml: 8,
             mb: 3,
             border: 1,
             borderRadius: 2,
             borderColor: "grey.400",
-            padding: 1
+            padding: 1,
+            width: 260,
           }}
         >
           <Typography sx={{ fontSize: 14, opacity: 0.8 }}>Origem da reserva:</Typography>
-          <ToggleButtonGroup
-          sx={{ gap: 1 }}
-          color="primary"
-          exclusive
-          value={bookingSource}
-          onChange={(event, newValue) => {setBookingSource(newValue)}}
-          defaultValue="calls"
-          >
-            <ToggleButton sx={{ boxShadow:2 }}value="calls">
-              <PhoneIcon/>
-            </ToggleButton>
-            <ToggleButton sx={{ boxShadow:2 }}value="espontaneo">
-              <DirectionsWalkIcon/>
-            </ToggleButton>
-            <ToggleButton sx={{ boxShadow:2 }}value="site">
-              <LanguageIcon/>
-            </ToggleButton>
-            <ToggleButton sx={{ boxShadow:2 }}value="social">
-              <InstagramIcon/>
-            </ToggleButton>
-          </ToggleButtonGroup>
-          <Input name="source" value={bookingSource} inputProps={{style: { textTransform: "uppercase", fontSize: 12 }}} required/>
-        </FormControl>
+          <Controller
+            name="booking_source"
+            defaultValue={bookingSource}
+            control={control}
+            render={( {field: {value, onChange} } ) =>
+              <>
+              <ToggleButtonGroup
+              sx={{ gap: 1 }}
+              color="primary"
+              exclusive
+              value={value}
+              onChange={(event, newValue) => onChange(newValue)}
+              defaultValue="calls"
+              >
+                <ToggleButton sx={{ boxShadow:2 }}value="calls">
+                  <PhoneIcon/>
+                </ToggleButton>
+                <ToggleButton sx={{ boxShadow:2 }}value="espontaneo">
+                  <DirectionsWalkIcon/>
+                </ToggleButton>
+                <ToggleButton sx={{ boxShadow:2 }}value="site">
+                  <LanguageIcon/>
+                </ToggleButton>
+                <ToggleButton sx={{ boxShadow:2 }}value="social">
+                  <InstagramIcon/>
+                </ToggleButton>
+              </ToggleButtonGroup>
+
+            <Input name="source" value={value} inputProps={{style: { textTransform: "uppercase", fontSize: 12 }}} required/>
+            </>
+            }
+          />
+          
+        </Box>
 
         <Box sx={{
             ml: 8,
@@ -273,32 +304,48 @@ export default function AddBooking({
            <GroupsIcon/>
           </Grid>
           <Grid item>
-            <Slider
-              sx={{ width: 130 }}
-              min={1}
-              max={40}
-              value={bookingGuestCount}
-              onChange={(event, newValue) => {setBookingGuestCount(newValue)}}
-              aria-labelledby="guest-label"
+            <Controller
+              name="guest_count"
+              control={control}
+              defaultValue={bookingGuestCount}
+              render={( { field: {value, onChange} } ) =>
+                <Slider
+                  sx={{ width: 130 }}
+                  min={1}
+                  max={40}
+                  value={value}
+                  onChange={(event, newValue) => {onChange(newValue)}}
+                  aria-labelledby="guest-label"
+                />
+              }
+            
             />
+
           </Grid>
           <Grid item>
-            <Input
-              name="input-guestCount"
-              value={bookingGuestCount}
-              size="small"
-              onChange={(event) => { setBookingGuestCount(event.target.value) }}
-              //onBlur={handleBlur}
-              inputProps={{
-                step: 1,
-                min: 0,
-                max: 40,
-                type: 'number',
-                'aria-labelledby': 'guest-label',
-                style: { width: 40 }
-              }}
-              required
+            <Controller
+              name="guest_count"
+              control={control}
+              defaultValue={bookingGuestCount}
+              render={({ field: {value, onChange} }) => 
+                <Input
+                  value={value}
+                  onChange={(event) => onChange(event.target.value)}
+                  size="small"
+                  inputProps={{
+                    step: 1,
+                    min: 0,
+                    max: 40,
+                    type: 'number',
+                    'aria-labelledby': 'guest-label',
+                    style: { width: 40 }
+                  }}
+                  required
+                />
+              }
+            
             />
+
           </Grid>
         </Grid>
       </Box>
@@ -342,7 +389,15 @@ export default function AddBooking({
             />
           </Box>
         </LocalizationProvider>
-        <Input name="input-booking_time" value={dayjs(bookingTime).format("DD/MM/YYYY HH:mm")} hidden/>
+        <Controller 
+          name="booking_time"
+          defaultValue={dayjs(bookingTime).format("DD/MM/YYYY HH:mm")}
+          control={control}
+          render={({field:{value}}) => 
+            <Input value={value} hidden/>
+          }
+        />
+        
         </Box>
         
         <Box sx={{
@@ -351,25 +406,37 @@ export default function AddBooking({
           alignItems: "center",
         }}>
         <InputLabel sx={{marginRight: 1, fontSize: 14, color: "grey.500" }}>Serviço:</InputLabel>
-        <Input
-          name="input-service"
-          sx={{padding: 0, opacity: 0.8}}
-          value={checkService()}
-          disable
-          disableUnderline
-          inputProps={{style: { fontSize: 14, color: "grey" }}}
+        <Controller
+          name="service"
+          defaultValue={checkService()}
+          control={control}
+          render={({field:{value}}) =>
+            <Input
+            sx={{padding: 0, opacity: 0.8}}
+            value={value}
+            disable
+            disableUnderline
+            inputProps={{style: { fontSize: 14, color: "grey" }}}
+            />
+          }
         />
+
         </Box>
 
         <Divider sx={{ height: 30 }} variant="middle" />
 
-        <TextField
+       <Controller 
+        name="guest_name"
+        control={control}
+        defaultValue={bookingGuestName}
+        onChange={ (value) => {setBookingGuestName(value)} }
+        render={ ( {field: {onChange, value}} ) =>
+          <TextField
           sx={{ marginLeft: 8, marginBottom: 2, width: 220}}
           inputProps={{ style: {fontSize: 14} }}
-          name="nome"
           label="Nome"
-          value={bookingGuestName}
-          onChange={ (params) => {setBookingGuestName(params.formattedValue)} }
+          value={value}
+          onChange={onChange}
           slotProps={{
             inputLabel: {
               shrink: true,
@@ -377,38 +444,55 @@ export default function AddBooking({
           }}
           placeholder="Nome e apelido"
           required
-        />
+          />
+        }
+      />
 
-        <MuiTelInput
-          sx={{ marginLeft: 8, marginBottom: 2, width: 220 }}
-          inputProps={{ style: {fontSize: 14} }}
-          name="phone"
-          label="Telemóvel"
-          defaultCountry="PT"
-          value={bookingGuestPhone}
+        <Controller
+          name="guest_phone"
+          control={control}
+          defaultValue={bookingGuestPhone}
           onChange={ (value) => {setBookingGuestPhone(value)} }
-          required
+          render={({field:{onChange,value}}) =>  
+            <MuiTelInput
+              sx={{ marginLeft: 8, marginBottom: 2, width: 220 }}
+              inputProps={{ style: {fontSize: 14} }}
+              label="Telemóvel"
+              defaultCountry="PT"
+              value={value}
+              onChange={onChange}
+              required
+            />
+          }
         />
 
-        <TextField
-          sx={{ marginLeft: 8, marginBottom: 1, width: 220 }}
-          inputProps={{ style: {fontSize: 14} }}
-          name="email"
-          label="Email"
-          type="email"
-          value={bookingGuestMail}
-          onChange={ (params) => {setBookingGuestMail(params.formattedValue)} }
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-          placeholder="emaildoguest@gmail.com"
+        <Controller
+          name="guest_mail"
+          control={control}
+          onChange={ (value) => {setBookingGuestMail(value)} }
+          defaultValue={bookingGuestMail}
+          render={({field:{onChange,value}}) => 
+            <TextField
+              sx={{ marginLeft: 8, marginBottom: 1, width: 220 }}
+              inputProps={{ style: {fontSize: 14} }}
+              label="Email"
+              type="email"
+              value={value}
+              onChange={onChange}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+              placeholder="emaildoguest@gmail.com"
+            />
+          }
         />
 
       <DrawerButton/>
 
-      </FormContainer>
+      </form>
+
       {alertParams === "success" && (
         <Alert severity="success" onClose={closeParams}>
           Reserva adicionada com sucesso.
@@ -421,4 +505,4 @@ export default function AddBooking({
       )}
     </Drawer>
   );
-}
+};
