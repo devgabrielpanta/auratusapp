@@ -35,6 +35,7 @@ import Grid from '@mui/material/Grid2';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { MuiTelInput } from 'mui-tel-input'
 
 export default function AddBooking({
   bookingsWidth,
@@ -363,7 +364,8 @@ export default function AddBooking({
         <Divider sx={{ height: 30 }} variant="middle" />
 
         <TextField
-          sx={{ marginLeft: 8, marginBottom: 2 }}
+          sx={{ marginLeft: 8, marginBottom: 2, width: 220}}
+          inputProps={{ style: {fontSize: 14} }}
           name="nome"
           label="Nome"
           value={bookingGuestName}
@@ -376,24 +378,24 @@ export default function AddBooking({
           placeholder="Nome e apelido"
           required
         />
-        <TextField
-          sx={{ marginLeft: 8, marginBottom: 2 }}
+
+        <MuiTelInput
+          sx={{ marginLeft: 8, marginBottom: 2, width: 220 }}
+          inputProps={{ style: {fontSize: 14} }}
           name="phone"
           label="Telemóvel"
+          defaultCountry="PT"
           value={bookingGuestPhone}
-          onChange={ (params) => {setBookingGuestPhone(params.formattedValue)} }
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-          placeholder="+351 927 540 803"
+          onChange={ (value) => {setBookingGuestPhone(value)} }
           required
         />
+
         <TextField
-          sx={{ marginLeft: 8, marginBottom: 1 }}
+          sx={{ marginLeft: 8, marginBottom: 1, width: 220 }}
+          inputProps={{ style: {fontSize: 14} }}
           name="email"
           label="Email"
+          type="email"
           value={bookingGuestMail}
           onChange={ (params) => {setBookingGuestMail(params.formattedValue)} }
           slotProps={{
