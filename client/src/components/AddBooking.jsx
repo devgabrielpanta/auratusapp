@@ -210,10 +210,9 @@ export default function AddBooking({
 
     if (requestMethod === "createBookings") {
       data.status = "reservado";
-      console.log(data)
-      //handleBookings(data, requestMethod); FALTA AJUSTAR O SERVICE QUE NÃO ESTÁ ALTERANDO QUANDO MUDA A DATA ANTES DE FAZER O REQUEST
+      console.log(data);
+      handleBookings(data, requestMethod);
     }
-    
   };
 
   return (

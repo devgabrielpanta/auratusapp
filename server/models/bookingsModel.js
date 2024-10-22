@@ -1,4 +1,6 @@
 import pool from "../db.js";
+import dayjs from "dayjs"
+import customParseFormat from "dayjs/plugin/customParseFormat.js"
 
 const db = pool;
 
@@ -25,7 +27,23 @@ const create = (bookingData) => {
       const query = `INSERT INTO ${dbName} 
       (guest_name, guest_count, booking_time, guest_phone, guest_mail, booking_status, booking_source, service)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-      const values = Object.values(bookingData);
+      
+      dayjs.extend(customParseFormat);
+      const bookingTime =
+      dayjs(bookingData.booking_time, "DD/MM/YYYY HH:mm")
+      .set("second", 0)
+      .format("YYYY-MM-DD HH:mm:ss");
+      
+      const values = [
+        bookingData.guest_name,
+        bookingData.guest_count,
+        bookingTime,
+        bookingData.guest_phone,
+        bookingData.guest_mail,
+        bookingData.status,
+        bookingData.booking_source,
+        bookingData.service,
+      ];
 
       db.query(query, values, (err, result) => {
       if (err) reject(err);

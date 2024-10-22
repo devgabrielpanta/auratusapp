@@ -29,11 +29,16 @@ export default function App() {
 
     if (method === "createBookings") {
       addBooking(data)
-      .then((data) => {
-      console.log(data);
-      // Adicionar callback para setar loading como false se for adicionada com sucesso e exibir o alert no front
-      setLoading(false);
-      });
+        .then((data) => {
+        console.log(data);
+        setAlertMessage("success");
+        setLoading(false);
+        })
+        .catch((error) => {
+          console.error(error)
+          setAlertMessage("error");
+          setLoading(false);
+        });
     }
   };
 
