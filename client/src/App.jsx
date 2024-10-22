@@ -23,16 +23,29 @@ export default function App() {
       .catch((error) => console.error(error));
   }, []);
 
-  const handleBookings = (data, method) => {
+  const handleBookings = (handleData, method) => {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
 
     if (method === "createBookings") {
-      addBooking(data)
+      addBooking(handleData)
         .then((data) => {
-        console.log(data);
-        setAlertMessage("success");
-        setLoading(false);
+          setBookings([
+            ...bookings,
+            {
+              id: data.booking.id,
+              guest_name: data.booking.guest_name,
+              guest_count: data.booking.guest_count,
+              booking_time: data.booking.booking_time,
+              guest_phone: data.booking.guest_phone,
+              guest_mail: data.booking.guest_mail,
+              status: data.booking.status,
+              booking_source: data.booking.booking_source,
+              service: data.booking.service,
+            }
+          ]);
+          setAlertMessage("success");
+          setLoading(false);
         })
         .catch((error) => {
           console.error(error)

@@ -210,7 +210,6 @@ export default function AddBooking({
 
     if (requestMethod === "createBookings") {
       data.status = "reservado";
-      console.log(data);
       handleBookings(data, requestMethod);
     }
   };
