@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
 import MenuItem from '@mui/material/MenuItem';
@@ -47,7 +47,7 @@ export default function AddBooking({
   closeParams,
 }) {
 
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, setValue } = useForm();
 
 
   const [drawerAction, setDrawerAction] = useState("createBookings");
@@ -86,10 +86,14 @@ export default function AddBooking({
     "source": "espontaneo"
   }]);
 
-  const checkService = () => {
+  const bookingService = () => {
     const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
-      return dayjs(bookingTime).isBefore(breakService) ? "Almoço" : "Jantar"
+    return dayjs(bookingTime).isBefore(breakService) ? "Almoço" : "Jantar"
   };
+
+  useEffect(() => {
+    setValue("service", bookingService());
+  }, [bookingTime, setValue]);
 
   const clearUpdateDrawer = () => {
     setBookingId("");
@@ -418,7 +422,6 @@ export default function AddBooking({
         <InputLabel sx={{marginRight: 1, fontSize: 14, color: "grey.500" }}>Serviço:</InputLabel>
         <Controller
           name="service"
-          defaultValue={checkService()}
           control={control}
           render={({field:{value}}) =>
             <Input
