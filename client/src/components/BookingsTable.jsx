@@ -18,6 +18,7 @@ import AlarmIcon from '@mui/icons-material/Alarm';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import ToggleButton from '@mui/material/ToggleButton';
+import Button from "@mui/material/Button";
 
 const renderedSource = (props) => {
   const sourceProp = props.formattedValue;
@@ -48,12 +49,11 @@ const getRowSpacing = (params) => {
 
 const renderedService = (props) => {
   const serviceProp = props.formattedValue;
-  console.log(serviceProp);
-  if(serviceProp === "almoco") {
+  if(serviceProp === "Almoço") {
     return <span><WbSunnyIcon /> Almoço</span>; //sx={{color:"black"}}
 
-  } else if (serviceProp === "janta") {
-    return <span><NightlightRoundIcon /> Janta</span>; //color="primary"
+  } else if (serviceProp === "Jantar") {
+    return <span><NightlightRoundIcon /> Jantar</span>; //color="primary"
   
   } else {
     return <QuestionMarkIcon/>
@@ -82,6 +82,15 @@ const columnGroupingModel = [
   }
 ];
 
+const editButton = (rowId) => {
+  return (
+  <Button
+  >
+    Editar: {rowId}
+  </Button>
+  )
+};
+
 const columns = [
   { field: 'reservado', headerName: 'reservado', width: 85, renderCell: renderStatusCell(EventAvailableIcon, "black", 'reservado')},
   { field: 'cancelado', headerName: 'cancelado', width: 85, renderCell: renderStatusCell(DoNotDisturbIcon, "red", 'cancelado')},
@@ -97,6 +106,7 @@ const columns = [
   { field: "guest_mail", headerName: "Email", width: 200 },
   { field: "booking_source", headerName: "Source", width: 70, renderCell: renderedSource},
   { field: "service", headerName: "Serviço", width: 100, renderCell: renderedService },
+  { field: 'editar', headerName: '', width: 85, renderCell: (params) => editButton(params.row.id)},
 ];
 
 const paginationModel = { page: 0, pageSize: 50 };
@@ -107,6 +117,7 @@ export default function BookingsTable({
   loading,
   bookingsList,
 }) {
+
   const mappedRows = bookingsList?.map((row, index) => ({
     //null list operations ?
     id: row.id || index,
