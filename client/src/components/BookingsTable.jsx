@@ -1,6 +1,6 @@
 import Paper from "@mui/material/Paper";
 import LoadingOverlay from "./LoadingOverlay";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, useGridApiContext } from "@mui/x-data-grid";
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import PhoneIcon from '@mui/icons-material/Phone';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
@@ -20,6 +20,9 @@ import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import ToggleButton from '@mui/material/ToggleButton';
 import Button from "@mui/material/Button";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import EditIcon from '@mui/icons-material/Edit';
+import { Typography } from "@mui/material";
 
 export default function BookingsTable({
   tableWidth,
@@ -27,7 +30,12 @@ export default function BookingsTable({
   loading,
   bookingsList,
   beginUpdate,
+  editBooking,
+  drawerAction,
+  changeDrawerState,
 }) {
+
+  const [clickedRow, setClickedRow] = useState(null);
 
 const renderedSource = (props) => {
   const sourceProp = props.formattedValue;
@@ -46,6 +54,9 @@ const rowStyles = makeStyles({
   strong: {
     backgroundColor: "#004aff1f",
     fontSize: "16px"
+  },
+  statusHeader: {
+    fontSize: "12px"
   }
 });
 
@@ -70,7 +81,14 @@ const renderedService = (props) => {
 };
 
 const renderStatusCell = (IconComponent, color, status) => (params) => (
-  <ToggleButton sx={{ backgroundColor: "white" }}>
+  <ToggleButton sx={{
+    border: 0,
+    size: 10,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%"
+    }}>
     <IconComponent style={{ color, opacity: params.row.booking_status === status ? 1 : 0.2 }} />
   </ToggleButton>
 );
@@ -92,22 +110,53 @@ const columnGroupingModel = [
 ];
 
 const editButton = (rowId) => {
-  return (
-  <Button
-  onClick={() => beginUpdate(rowId)}
-  >
-    Editar:
-  </Button>
-  )
+    return (
+        <Button
+        onClick={() => handleEditButton(rowId)}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}>
+          <EditIcon sx={{
+            color: "black",
+            fontSize: 18,
+            opacity: rowId === clickedRow && rowId === editBooking ? 1 : 0.3
+          }} />
+          <Typography sx={{
+            fontSize: 10,
+            textTransform: "lowercase",
+            color: "black",
+            opacity: rowId === clickedRow && rowId === editBooking ? 1 : 0
+            }}>
+              editar
+          </Typography>
+        </Button>
+    )
+};
+
+const handleRowClick = (rowId) => {
+  setClickedRow(rowId);
+};
+
+const handleEditButton = (rowId) => {
+  if (clickedRow === rowId) {
+    setClickedRow(null);
+    changeDrawerState("createBookings");
+  } else {
+    beginUpdate(rowId)
+    setClickedRow(rowId);
+  }
 };
 
 const columns = [
-  { field: 'reservado', headerName: 'reservado', width: 85, renderCell: renderStatusCell(EventAvailableIcon, "black", 'reservado')},
-  { field: 'cancelado', headerName: 'cancelado', width: 85, renderCell: renderStatusCell(DoNotDisturbIcon, "red", 'cancelado')},
-  { field: 'noshown', headerName: 'noshown', width: 85, renderCell: renderStatusCell(HourglassDisabledIcon, "purple", 'noshown')},
-  { field: 'esperando', headerName: 'esperando', width: 85, renderCell: renderStatusCell(AlarmIcon, "black", 'esperando')},
-  { field: 'servindo', headerName: 'servindo', width: 85, renderCell: renderStatusCell(RestaurantIcon, "black", 'servindo')},
-  { field: 'finalizado', headerName: 'finalizado', width: 85, renderCell: renderStatusCell(SportsScoreIcon, "black", 'finalizado')},
+  { field: 'editar', headerName: '', width: 60, renderCell: (params) => editButton(params.row.id) },
+  { field: 'reservado', headerName: 'reservado', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(EventAvailableIcon, "black", 'reservado')},
+  { field: 'cancelado', headerName: 'cancelado', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(DoNotDisturbIcon, "red", 'cancelado')},
+  { field: 'noshown', headerName: 'noshown', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(HourglassDisabledIcon, "purple", 'noshown')},
+  { field: 'esperando', headerName: 'esperando', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(AlarmIcon, "black", 'esperando')},
+  { field: 'servindo', headerName: 'servindo', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(RestaurantIcon, "black", 'servindo')},
+  { field: 'finalizado', headerName: 'finalizado', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(SportsScoreIcon, "black", 'finalizado')},
   { field: "id", headerName: "ID", width: 20 },
   { field: "guest_name", headerName: "Guest Name", width: 200 },
   { field: "guest_count", headerName: "Guests", width: 70 },
@@ -116,7 +165,6 @@ const columns = [
   { field: "guest_mail", headerName: "Email", width: 200 },
   { field: "booking_source", headerName: "Source", width: 70, renderCell: renderedSource},
   { field: "service", headerName: "Serviço", width: 100, renderCell: renderedService },
-  { field: 'editar', headerName: '', width: 85, renderCell: (params) => editButton(params.row.id)},
 ];
 
   const paginationModel = { page: 0, pageSize: 50 };
@@ -185,6 +233,7 @@ const columns = [
         getRowSpacing={getRowSpacing}
         sx={{ zIndex: 0 }}
         columnGroupingModel={columnGroupingModel}
+        //onRowClick={(params) => handleRowClick(params.row.id)}
       />
     </Paper>
   );

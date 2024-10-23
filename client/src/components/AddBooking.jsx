@@ -64,7 +64,7 @@ export default function AddBooking({
   const [bookingSource, setBookingSource] = useState("");
 
   useEffect(() => {
-    if(editBooking) {
+    if(drawerAction != "createBookings") {
       const currentlyData = bookingsList.find( ({id}) => id === editBooking);
 
       const editingYear = dayjs(currentlyData.booking_time).get("year");
@@ -81,32 +81,10 @@ export default function AddBooking({
       setValue("guest_phone", currentlyData.guest_phone);
       setValue("guest_mail", currentlyData.guest_mail);
       setValue("booking_source", currentlyData.booking_source);
+    } else {
+      clearUpdateDrawer();
     }
-  }, [editBooking]);
-
-  const updateBookingsData = () => {
-    const currentlyData = JSON.stringify(bookingsList.find( ({id}) => id === editBooking));
-    console.log(`Atualizando a reserva: ${currentlyData.guest_name}`)
-    setValue("id", currentlyData.id);
-    setValue("status", currentlyData.status);
-    setValue("guest_name", currentlyData.guest_name);
-    setValue("guest_count", currentlyData.guest_count);
-    setBookingTime(dayjs(currentlyData.booking_time));
-    setValue("guest_phone", currentlyData.guest_phone);
-    setValue("guest_mail", currentlyData.guest_mail);
-    setValue("source", currentlyData.source);
-  };
-
-  const bookingTestData = JSON.stringify([{
-    "id": 432,
-    "status": "noshown",
-    "guest_name": "Teste updateBookings v2",
-    "guest_count": 5,
-    "booking_time": "2024-10-24 12:0",
-    "guest_phone": "+351 927 540 540",
-    "guest_mail": "email@gmail.com",
-    "source": "calls"
-  }]);
+  }, [drawerAction, editBooking]);
 
   const bookingService = () => {
     const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
@@ -131,12 +109,8 @@ export default function AddBooking({
 
   const ButtonVoltar = () => {
     return drawerAction === "updateBookings" ?
-      <Box sx={{
-        display: "flex",
-        justifyContent: "right",
-        mr: 8
-      }}>
-        <Button sx={{width: "100px"}} variant="outlined" onClick={() => {clearUpdateDrawer()}}>Voltar</Button>
+      <Box>
+        <Button sx={{width: "90px", alignSelf: "right"}} variant="outlined" onClick={() => {clearUpdateDrawer()}}>Voltar</Button>
       </Box>
     : ""
   };
@@ -250,25 +224,25 @@ export default function AddBooking({
       variant="permanent"
       anchor="left"
     >
-      {/*button adicionado apenas para fazer os testes de desenvolvimento*/}
-      <Button sx={{width: "100px"}}variant="contained" onClick={ () => {updateBookingsData(bookingTestData)} }>Editar Reserva</Button>
-      <Toolbar />
-      
-      <ButtonVoltar/>
-          
+     
       <Divider sx={{ height: 30}}/>
 
       <Box
         sx={{
           marginLeft: 8,
-          fontWeight: 700,
-          fontSize: "23px"
+          display: "inline-flex",
+          gap: 3
         }}
       >
-        {drawerAction === "createBookings" ? "Adicionar Reserva" : "Editar Reserva"}
+        <Typography sx={{
+          fontWeight: 700,
+          fontSize: 25,
+        }}
+        >{drawerAction === "createBookings" ? "Adicionar Reserva" : "Editar Reserva"}</Typography>
+        <ButtonVoltar/>
       </Box>
 
-      <Divider sx={{ ml: 8, mb: 3, border: 1, borderColor: "primary.main", opacity: 1, width: "70%", alignSelf: "lef" }} />
+      <Divider sx={{ ml: 8, mb: 3, border: 1, borderColor: "primary.main", opacity: 1, width: "80%", alignSelf: "lef" }} />
 
       <form onSubmit={handleSubmit(handleDrawer)}>
        

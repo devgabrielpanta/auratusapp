@@ -14,7 +14,7 @@ export default function App() {
   const [bookings, setBookings] = useState([]);
   const [alertMessage, setAlertMessage] = useState("hidden");
   const [drawerAction, setDrawerAction] = useState("createBookings");
-  const [editBooking, setEditingBooking] = useState("");
+  const [editBooking, setEditingBooking] = useState(null);
   
 
   useEffect(() => {
@@ -27,7 +27,12 @@ export default function App() {
   }, []);
 
   const changeDrawerState = (action) => {
-    return setDrawerAction(action)
+    if (action === "createBookings") {
+      setDrawerAction(action)
+      setEditingBooking(null)
+    } else {
+      setDrawerAction(action)
+    }
   };
 
   const beginUpdate = (rowId) => {
@@ -93,6 +98,9 @@ export default function App() {
         loading={loading}
         bookingsList={bookings}
         beginUpdate={beginUpdate}
+        editBooking={editBooking}
+        drawerAction={drawerAction}
+        changeDrawerState={changeDrawerState}
       />
     </>
   );
