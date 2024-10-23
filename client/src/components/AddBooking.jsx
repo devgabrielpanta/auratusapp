@@ -119,14 +119,14 @@ export default function AddBooking({
 
   const clearUpdateDrawer = () => {
     changeDrawerState("createBookings");
-    setBookingId("");
-    setBookingStatus("");
-    setBookingGuestName("");
-    setBookingGuestCount("");
+    setValue("id", "");
+    setValue("booking_status", "");
+    setValue("guest_name", "");
+    setValue("guest_count", "");
+    setValue("guest_phone", "");
+    setValue("guest_mail", "");
+    setValue("booking_source", "");
     setBookingTime(dayjs());
-    setBookingGuestPhone("");
-    setBookingGuestMail("");
-    setBookingSource("");
   }
 
   const ButtonVoltar = () => {
