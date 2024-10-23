@@ -45,12 +45,14 @@ export default function AddBooking({
   handleBookings,
   alertParams,
   closeParams,
+  drawerAction,
+  changeDrawerState,
+  editBooking,
+  bookingsList,
 }) {
 
   const { control, handleSubmit, setValue } = useForm();
 
-
-  const [drawerAction, setDrawerAction] = useState("createBookings");
   //Booking Default Values
   const [bookingId, setBookingId] = useState("");
   const [bookingStatus, setBookingStatus] = useState("");
@@ -61,29 +63,49 @@ export default function AddBooking({
   const [bookingGuestMail, setBookingGuestMail] = useState("");
   const [bookingSource, setBookingSource] = useState("");
 
-  const updateBookingsData = (bookingData) => {
-    const currentlyData = JSON.parse(bookingData)[0];
+  useEffect(() => {
+    if(editBooking) {
+      const currentlyData = bookingsList.find( ({id}) => id === editBooking);
+
+      const editingYear = dayjs(currentlyData.booking_time).get("year");
+      const editingMonth = dayjs(currentlyData.booking_time).get("month");
+      const editingDay = dayjs(currentlyData.booking_time).get("date");
+      const editingHour = dayjs(currentlyData.booking_time).get("hour");
+      const editingMinute = dayjs(currentlyData.booking_time).get("minute");
+      setBookingTime(dayjs().year(editingYear).month(editingMonth).date(editingDay).hour(editingHour).minute(editingMinute));
+
+      setValue("id", currentlyData.id);
+      setValue("booking_status", currentlyData.booking_status);
+      setValue("guest_name", currentlyData.guest_name);
+      setValue("guest_count", currentlyData.guest_count);
+      setValue("guest_phone", currentlyData.guest_phone);
+      setValue("guest_mail", currentlyData.guest_mail);
+      setValue("booking_source", currentlyData.booking_source);
+    }
+  }, [editBooking]);
+
+  const updateBookingsData = () => {
+    const currentlyData = JSON.stringify(bookingsList.find( ({id}) => id === editBooking));
     console.log(`Atualizando a reserva: ${currentlyData.guest_name}`)
-    setBookingId(currentlyData.id);
-    setBookingStatus(currentlyData.status);
-    setBookingGuestName(currentlyData.guest_name);
-    setBookingGuestCount(currentlyData.guest_count);
+    setValue("id", currentlyData.id);
+    setValue("status", currentlyData.status);
+    setValue("guest_name", currentlyData.guest_name);
+    setValue("guest_count", currentlyData.guest_count);
     setBookingTime(dayjs(currentlyData.booking_time));
-    setBookingGuestPhone(currentlyData.guest_phone);
-    setBookingGuestMail(currentlyData.guest_mail);
-    setBookingSource(currentlyData.source);
-    setDrawerAction("updateBookings");
+    setValue("guest_phone", currentlyData.guest_phone);
+    setValue("guest_mail", currentlyData.guest_mail);
+    setValue("source", currentlyData.source);
   };
 
   const bookingTestData = JSON.stringify([{
-    "id": 123,
-    "status": "reservado",
-    "guest_name": "Teste updateBookings",
-    "guest_count": 3,
-    "booking_time": "2024-01-30 23:13",
-    "guest_phone": "+351 927 540 927",
-    "guest_mail": "emaildoguest@gmail.com",
-    "source": "espontaneo"
+    "id": 432,
+    "status": "noshown",
+    "guest_name": "Teste updateBookings v2",
+    "guest_count": 5,
+    "booking_time": "2024-10-24 12:0",
+    "guest_phone": "+351 927 540 540",
+    "guest_mail": "email@gmail.com",
+    "source": "calls"
   }]);
 
   const bookingService = () => {
@@ -96,6 +118,7 @@ export default function AddBooking({
   }, [bookingTime, setValue]);
 
   const clearUpdateDrawer = () => {
+    changeDrawerState("createBookings");
     setBookingId("");
     setBookingStatus("");
     setBookingGuestName("");
@@ -104,7 +127,6 @@ export default function AddBooking({
     setBookingGuestPhone("");
     setBookingGuestMail("");
     setBookingSource("");
-    setDrawerAction("createBookings");
   }
 
   const ButtonVoltar = () => {
@@ -147,12 +169,11 @@ export default function AddBooking({
         
         <Box sx={{ marginLeft: 8 }}>
           <Controller
-            name="status"
+            name="booking_status"
             defaultValue={bookingStatus}
             control={control}
             render={({ field: {value, onChange} }) =>
               <Select
-                id="status"
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
                 label="Status:"
@@ -197,7 +218,7 @@ export default function AddBooking({
             type="submit"
             variant="contained"
             color="error"
-            onClick={() => setDrawerAction("deleteBookings")}
+            onClick={() => changeDrawerState("deleteBookings")}
           >
             Deletar Reserva
           </Button>
@@ -293,7 +314,7 @@ export default function AddBooking({
                 </ToggleButton>
               </ToggleButtonGroup>
 
-            <Input name="source" value={value} inputProps={{style: { textTransform: "uppercase", fontSize: 12 }}} required/>
+            <Input name="booking_source" value={value} inputProps={{style: { textTransform: "uppercase", fontSize: 12 }}} required/>
             </>
             }
           />
@@ -382,7 +403,7 @@ export default function AddBooking({
                 setBookingTime(newDate.hour(bookingTime.hour()).minute(bookingTime.minute()));
               }}
               format="DD/MM/YYYY"
-              disablePast
+              disablePast={drawerAction === "createBookings"}
             />
             <DesktopTimePicker
               sx={{ width: 120 }}

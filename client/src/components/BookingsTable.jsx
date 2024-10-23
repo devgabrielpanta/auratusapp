@@ -19,6 +19,15 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import ToggleButton from '@mui/material/ToggleButton';
 import Button from "@mui/material/Button";
+import dayjs from "dayjs";
+
+export default function BookingsTable({
+  tableWidth,
+  tableMt,
+  loading,
+  bookingsList,
+  beginUpdate,
+}) {
 
 const renderedSource = (props) => {
   const sourceProp = props.formattedValue;
@@ -85,8 +94,9 @@ const columnGroupingModel = [
 const editButton = (rowId) => {
   return (
   <Button
+  onClick={() => beginUpdate(rowId)}
   >
-    Editar: {rowId}
+    Editar:
   </Button>
   )
 };
@@ -109,21 +119,14 @@ const columns = [
   { field: 'editar', headerName: '', width: 85, renderCell: (params) => editButton(params.row.id)},
 ];
 
-const paginationModel = { page: 0, pageSize: 50 };
-
-export default function BookingsTable({
-  tableWidth,
-  tableMt,
-  loading,
-  bookingsList,
-}) {
+  const paginationModel = { page: 0, pageSize: 50 };
 
   const mappedRows = bookingsList?.map((row, index) => ({
     //null list operations ?
     id: row.id || index,
     guest_name: row.guest_name,
     guest_count: row.guest_count,
-    booking_time: row.booking_time,
+    booking_time: dayjs(row.booking_time).format("DD/MM/YYYY HH:mm"),
     guest_phone: row.guest_phone,
     guest_mail: row.guest_mail,
     booking_source: row.booking_source,
