@@ -36,6 +36,7 @@ export default function BookingsTable({
 }) {
 
   const [clickedRow, setClickedRow] = useState(null);
+  const [mappedRows, setMappedRows] = useState([]);
 
 const renderedSource = (props) => {
   const sourceProp = props.formattedValue;
@@ -169,19 +170,24 @@ const columns = [
 
   const paginationModel = { page: 0, pageSize: 50 };
 
-  const mappedRows = bookingsList?.map((row, index) => ({
-    //null list operations ?
-    id: row.id || index,
-    guest_name: row.guest_name,
-    guest_count: row.guest_count,
-    booking_time: dayjs(row.booking_time).format("DD/MM/YYYY HH:mm"),
-    guest_phone: row.guest_phone,
-    guest_mail: row.guest_mail,
-    booking_source: row.booking_source,
-    booking_status: row.booking_status,
-    booking_source: row.booking_source,
-    service: row.service,
-  }));
+  useEffect(() => {
+    setMappedRows([]);
+
+    const bookingsRows = bookingsList?.map((row, index) => ({
+      //null list operations ?
+      id: row.id || index,
+      guest_name: row.guest_name,
+      guest_count: row.guest_count,
+      booking_time: dayjs(row.booking_time).format("DD/MM/YYYY HH:mm"),
+      guest_phone: row.guest_phone,
+      guest_mail: row.guest_mail,
+      booking_source: row.booking_source,
+      booking_status: row.booking_status,
+      service: row.service,
+    }));
+    setMappedRows(bookingsRows);
+
+  }, [bookingsList]);
 
   const classes = rowStyles();
 
@@ -234,6 +240,7 @@ const columns = [
         sx={{ zIndex: 0 }}
         columnGroupingModel={columnGroupingModel}
         //onRowClick={(params) => handleRowClick(params.row.id)}
+        getRowId={(row) => row.id}
       />
     </Paper>
   );

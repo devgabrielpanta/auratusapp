@@ -51,7 +51,7 @@ export default function AddBooking({
   bookingsList,
 }) {
 
-  const { control, handleSubmit, setValue } = useForm();
+  const { control, handleSubmit, setValue, reset } = useForm();
 
   //Booking Default Values
   const [bookingId, setBookingId] = useState("");
@@ -204,8 +204,17 @@ export default function AddBooking({
     const requestMethod = drawerAction;
 
     if (requestMethod === "createBookings") {
-      data.status = "reservado";
+      data.booking_status = "reservado";
       handleBookings(data, requestMethod);
+      reset({
+        id: "",
+        booking_status: "",
+        guest_name: "",
+        guest_count: "",
+        guest_phone: "",
+        guest_mail: "",
+        booking_source: "",
+      });
     }
   };
 

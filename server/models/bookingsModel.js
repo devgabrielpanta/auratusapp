@@ -52,8 +52,9 @@ const create = (bookingData) => {
       ...bookingData
       });
       });
-    
+
       connection.release();
+
     });
   });
 };

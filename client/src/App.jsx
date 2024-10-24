@@ -48,6 +48,8 @@ export default function App() {
     if (method === "createBookings") {
       addBooking(handleData)
         .then((data) => {
+          console.log(data);
+          console.log(`data em string: ${JSON.stringify(data)}`)
           setBookings([
             ...bookings,
             {
@@ -64,6 +66,7 @@ export default function App() {
           ]);
           setAlertMessage("success");
           setLoading(false);
+          console.log(`novos dados da reserva adicionados ao state: ${JSON.stringify(bookings)}`);
         })
         .catch((error) => {
           console.error(error)

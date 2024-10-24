@@ -7,7 +7,12 @@ export const getBookings = () => {
 };
 
 export const addBooking = (booking) => {
-  return api.post("/bookings", booking).then((response) => response.data);
+  return api.post("/bookings", booking).then((response) => {
+    console.log(`response do request: ${JSON.stringify(response)}`)
+    console.log(`data do response: ${JSON.stringify(response.data)}`)
+    response.data
+
+  });
 };
 
 export const deleteBooking = (id) => {
