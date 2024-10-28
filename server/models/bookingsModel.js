@@ -88,11 +88,21 @@ const update = async (id, bookingData) => {
     bookingData.booking_source,
     bookingData.service
   ]
-  console.log(JSON.stringify(values));
 
   try {
     const [result] = await db.promise().query(query, values);
-    return result;
+    const updatedBooking = {
+      id: id,
+      guest_name: bookingData.guest_name,
+      guest_count: bookingData.guest_count,
+      booking_time: bookingTime,
+      guest_phone: bookingData.guest_phone,
+      guest_mail: bookingData.guest_mail,
+      booking_status: bookingData.booking_status,
+      booking_source: bookingData.booking_source,
+      service: bookingData.service,
+    }
+    return updatedBooking;
   } catch (err) {
     console.error("Erro ao executar a função update: ", err)
     throw err;

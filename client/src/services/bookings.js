@@ -13,5 +13,7 @@ export const addBooking = (booking) => {
 };
 
 export const updateBooking = (id, booking) => {
-  return api.put(`/bookings/${id}`, booking).then((response) => response.data);
+  return api.put(`/bookings/${id}`, booking).then((response) => {
+    return response.data
+  });
 };

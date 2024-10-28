@@ -47,12 +47,11 @@ export default function App() {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
 
-    method === "createBookings"
-    ? addBooking(handleData)
+    if (method === "createBookings") {
+      addBooking(handleData)
       .then((response) => {
 
         const booking = response.booking;
-        console.log(booking);
 
         setBookings((prevBookings) => [
           ...prevBookings,
@@ -71,8 +70,34 @@ export default function App() {
         setAlertMessage("success");
         setLoading(false);
       })
-      .catch((err) => {console.error(err)})
-    : updateBooking(handleData.id, handleData)
+      .catch((err) => {
+        setAlertMessage("error");
+        setLoading(false);
+        console.error(err)
+      })
+    } else {
+        updateBooking(handleData.id, handleData)
+        .then((response) => {
+
+          const updatedBooking = response.booking;
+
+          setBookings((prevBookings) => 
+            prevBookings.map((booking) =>
+              booking.id === updatedBooking.id
+              ? { ...updatedBooking }
+              : booking
+            )
+          );
+          
+          setAlertMessage("success");
+          setLoading(false);
+        })
+        .catch((err) => {
+          setAlertMessage("error");
+          setLoading(false);
+          console.error(err)
+        })
+      }
   };
 
   const closeAlert = () => {

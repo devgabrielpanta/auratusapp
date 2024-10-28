@@ -210,7 +210,7 @@ export default function AddBooking({
     : data.booking_status;
 
     data.booking_status = handleStatus;
-    await handleBookings(data, requestMethod);
+    handleBookings(data, requestMethod);
     reset({
       id: "",
       booking_status: "",
