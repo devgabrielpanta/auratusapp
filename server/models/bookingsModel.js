@@ -60,23 +60,17 @@ const create = (bookingData) => {
 };
 
 // (R)ead bookings:
-const getAll = () => {
-  return new Promise((resolve, reject) => {
-    db.getConnection((err, connection) => {
-      if (err) {
-        console.error('Error connecting to the database:', err);
-        return;
-      }
-      const query = `SELECT * FROM ${dbName}`;
+const getAll = async () => {
+  const query = `SELECT * FROM ${dbName}`;
 
-      db.query(query, (err, result) => {
-        if (err) reject(err);
-        resolve(result);
-      });
-      
-      connection.release();
-    });
-  });
+  try {
+    const [result] = await db.promise().query(query);
+    return result;
+
+  } catch (err) {
+    console.error("Erro ao executar a função getAll: ", err);
+    throw err;
+  }
 };
 
 // (U)pdate bookings:
