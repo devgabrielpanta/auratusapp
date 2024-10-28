@@ -192,7 +192,9 @@ export default function AddBooking({
             type="submit"
             variant="contained"
             color="error"
-            onClick={() => changeDrawerState("deleteBookings")}
+            onClick={
+              setValue("booking_status", "cancelado")
+            }
           >
             Deletar Reserva
           </Button>
@@ -205,7 +207,6 @@ export default function AddBooking({
 
     const handleStatus =
     requestMethod === "createBookings" ? "reservado"
-    : requestMethod === "deleteBookings" ? "cancelado" 
     : data.booking_status;
 
     data.booking_status = handleStatus;

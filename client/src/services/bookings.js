@@ -12,10 +12,6 @@ export const addBooking = (booking) => {
   });
 };
 
-export const deleteBooking = (id) => {
-  return api.delete(`/bookings/${id}`).then((response) => response.data);
-};
-
 export const updateBooking = (id, booking) => {
   return api.put(`/bookings/${id}`, booking).then((response) => response.data);
 };
