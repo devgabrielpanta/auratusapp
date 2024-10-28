@@ -8,7 +8,7 @@ export const getBookings = () => {
 
 export const addBooking = (booking) => {
   return api.post("/bookings", booking).then((response) => {
-    response.data
+    return response.data
   });
 };
 

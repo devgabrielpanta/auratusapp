@@ -38,6 +38,24 @@ export default function BookingsTable({
   const [clickedRow, setClickedRow] = useState(null);
   const [mappedRows, setMappedRows] = useState([]);
 
+  useEffect(() => {
+    setMappedRows([]);
+    const bookingsRows = bookingsList.map((row, index) => ({
+      //null list operations ?
+      booking_status: row.booking_status,
+      id: row.id || index,
+      guest_name: row.guest_name,
+      guest_count: row.guest_count,
+      booking_time: dayjs(row.booking_time).format("DD/MM/YYYY HH:mm"),
+      guest_phone: row.guest_phone,
+      guest_mail: row.guest_mail,
+      booking_source: row.booking_source,
+      service: row.service,
+    }));
+    setMappedRows(bookingsRows);
+
+  }, [bookingsList]);
+
 const renderedSource = (props) => {
   const sourceProp = props.formattedValue;
   return sourceProp === "espontaneo" ? <DirectionsWalkIcon sx={{color:"black"}}/>
@@ -82,14 +100,17 @@ const renderedService = (props) => {
 };
 
 const renderStatusCell = (IconComponent, color, status) => (params) => (
-  <ToggleButton sx={{
+  <ToggleButton
+    key={params.row.id}
+    value={status}
+    sx={{
     border: 0,
-    size: 10,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     width: "100%"
-    }}>
+    }}
+  >
     <IconComponent style={{ color, opacity: params.row.booking_status === status ? 1 : 0.2 }} />
   </ToggleButton>
 );
@@ -170,25 +191,6 @@ const columns = [
 
   const paginationModel = { page: 0, pageSize: 50 };
 
-  useEffect(() => {
-    setMappedRows([]);
-
-    const bookingsRows = bookingsList?.map((row, index) => ({
-      //null list operations ?
-      id: row.id || index,
-      guest_name: row.guest_name,
-      guest_count: row.guest_count,
-      booking_time: dayjs(row.booking_time).format("DD/MM/YYYY HH:mm"),
-      guest_phone: row.guest_phone,
-      guest_mail: row.guest_mail,
-      booking_source: row.booking_source,
-      booking_status: row.booking_status,
-      service: row.service,
-    }));
-    setMappedRows(bookingsRows);
-
-  }, [bookingsList]);
-
   const classes = rowStyles();
 
   if (loading) {
@@ -231,6 +233,7 @@ const columns = [
       <DataGrid
         columns={columns}
         rows={mappedRows}
+        key={mappedRows.length}
         initialStateBookings={{ pagination: { paginationModel } }}
         stickyHeader
         getRowClassName={(params) => {

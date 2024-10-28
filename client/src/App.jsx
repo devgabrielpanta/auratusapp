@@ -5,6 +5,8 @@ import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
 import { getBookings, addBooking, updateBooking } from "./services/bookings";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js"
 
 const drawerWidth = 400;
 const navHeight = 70;
@@ -41,38 +43,36 @@ export default function App() {
     return JSON.stringify(bookings.find( ({id}) => id === rowId));
   }
 
-  const handleBookings = async (handleData, method) => {
+  const handleBookings = (handleData, method) => {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
-    
-    try {
-      const data =
-      method === "createBookings"
-      ? await addBooking(handleData)
-      : await updateBooking(handleData.id, handleData)
 
-      setBookings([
-        ...bookings,
-        {
-          id: data.booking.id,
-          guest_name: data.booking.guest_name,
-          guest_count: data.booking.guest_count,
-          booking_time: data.booking.booking_time,
-          guest_phone: data.booking.guest_phone,
-          guest_mail: data.booking.guest_mail,
-          status: data.booking.status,
-          booking_source: data.booking.booking_source,
-          service: data.booking.service,
-        }
-      ]);
-      setAlertMessage("success");
-      setLoading(false);      
+    method === "createBookings"
+    ? addBooking(handleData)
+      .then((response) => {
 
-    } catch (err) {
-      console.error(err)
-      setAlertMessage("error");
-      setLoading(false);
-    }
+        const booking = response.booking;
+        console.log(booking);
+
+        setBookings((prevBookings) => [
+          ...prevBookings,
+          {
+            id: booking.id,
+            guest_name: booking.guest_name,
+            guest_count: booking.guest_count,
+            booking_time: booking.booking_time,
+            guest_phone: booking.guest_phone,
+            guest_mail: booking.guest_mail,
+            booking_status: booking.booking_status,
+            booking_source: booking.booking_source,
+            service: booking.service,
+          },
+        ]);
+        setAlertMessage("success");
+        setLoading(false);
+      })
+      .catch((err) => {console.error(err)})
+    : updateBooking(handleData.id, handleData)
   };
 
   const closeAlert = () => {

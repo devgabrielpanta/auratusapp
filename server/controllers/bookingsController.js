@@ -21,7 +21,6 @@ const createBooking = async (req, res) => {
     // o ideal é validar os campos antes de inserir no banco
     // gps: implementar as validações após com o Zod para teste de produção.
     const newBookingData = await bookingsModel.create(newBooking);
-    console.log(`newBookingData: ${newBookingData}`);
     res.status(201).json({
       message: "Reserva criada com sucesso",
       booking: newBookingData

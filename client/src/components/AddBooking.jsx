@@ -201,7 +201,7 @@ export default function AddBooking({
         </Box>
   };
 
-  const handleDrawer = (data) => {
+  const handleDrawer = async (data) => {
     // adicionar regras de validação
     const requestMethod = drawerAction;
 
@@ -210,7 +210,7 @@ export default function AddBooking({
     : data.booking_status;
 
     data.booking_status = handleStatus;
-    handleBookings(data, requestMethod);
+    await handleBookings(data, requestMethod);
     reset({
       id: "",
       booking_status: "",
