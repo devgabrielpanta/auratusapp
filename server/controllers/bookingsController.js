@@ -20,10 +20,11 @@ const createBooking = async (req, res) => {
     // falha de segurança grave: o usuário pode enviar qualquer campo no corpo da requisição
     // o ideal é validar os campos antes de inserir no banco
     // gps: implementar as validações após com o Zod para teste de produção.
-    const createdBooking = await bookingsModel.create(newBooking);
+    const newBookingData = await bookingsModel.create(newBooking);
+    console.log(`newBookingData: ${newBookingData}`);
     res.status(201).json({
       message: "Reserva criada com sucesso",
-      booking: createdBooking
+      booking: newBookingData
     });
     // a resposta deve conter a reserva criada
     //gps: no frontend eu altero o useState para loading, o que executa a função de getAllBookings e trás a reserva nova para as views, como melhorar?

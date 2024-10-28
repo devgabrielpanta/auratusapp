@@ -17,6 +17,51 @@ const closeDb = () => {
 };
 
 // (C)reate bookings:
+const create = async (bookingData) => {
+  const query = `INSERT INTO ${dbName} 
+      (guest_name, guest_count, booking_time, guest_phone, guest_mail, booking_status, booking_source, service)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  
+  dayjs.extend(customParseFormat);
+  const bookingTime =
+  dayjs(bookingData.booking_time, "DD/MM/YYYY HH:mm")
+  .set("second", 0)
+  .format("YYYY-MM-DD HH:mm:ss");
+  
+  const values = [
+    bookingData.guest_name,
+    bookingData.guest_count,
+    bookingTime,
+    bookingData.guest_phone,
+    bookingData.guest_mail,
+    bookingData.booking_status,
+    bookingData.booking_source,
+    bookingData.service,
+  ];
+
+  try {
+    const [result] = await db.promise().query(query, values);
+    const newBooking = {
+      id: result.insertId,
+      guest_name: bookingData.guest_name,
+      guest_count: bookingData.guest_count,
+      booking_time: bookingTime,
+      guest_phone: bookingData.guest_phone,
+      guest_mail: bookingData.guest_mail,
+      booking_status: bookingData.booking_status,
+      booking_source: bookingData.booking_source,
+      service: bookingData.service,
+    }
+    return newBooking;
+
+  } catch (err) {
+    console.log("Erro ao criar uma nova reserva: ", err);
+    throw err;
+  }
+};
+
+/*
+// (C)reate bookings:
 const create = (bookingData) => {
   return new Promise((resolve, reject) => {
     db.getConnection((err, connection) => {
@@ -58,6 +103,8 @@ const create = (bookingData) => {
     });
   });
 };
+*/
+
 
 // (R)ead bookings:
 const getAll = async () => {
