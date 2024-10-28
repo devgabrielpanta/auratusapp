@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
-import { getBookings, addBooking } from "./services/bookings";
+import { getBookings, addBooking, updateBooking } from "./services/bookings";
 
 const drawerWidth = 400;
 const navHeight = 70;
@@ -41,6 +41,41 @@ export default function App() {
     return JSON.stringify(bookings.find( ({id}) => id === rowId));
   }
 
+  const handleBookings = async (handleData, method) => {
+    // trocar o status e ativar o spinner de loading
+    setLoading(true);
+    
+    try {
+      const data =
+      method === "createBookings"
+      ? await addBooking(handleData)
+      : await updateBooking(handleData.id, handleData)
+
+      setBookings([
+        ...bookings,
+        {
+          id: data.booking.id,
+          guest_name: data.booking.guest_name,
+          guest_count: data.booking.guest_count,
+          booking_time: data.booking.booking_time,
+          guest_phone: data.booking.guest_phone,
+          guest_mail: data.booking.guest_mail,
+          status: data.booking.status,
+          booking_source: data.booking.booking_source,
+          service: data.booking.service,
+        }
+      ]);
+      setAlertMessage("success");
+      setLoading(false);      
+
+    } catch (err) {
+      console.error(err)
+      setAlertMessage("error");
+      setLoading(false);
+    }
+  };
+
+  /*
   const handleBookings = (handleData, method) => {
     // trocar o status e ativar o spinner de loading
     setLoading(true);
@@ -75,6 +110,7 @@ export default function App() {
         });
     }
   };
+  */
 
   const closeAlert = () => {
     setAlertMessage("hidden");

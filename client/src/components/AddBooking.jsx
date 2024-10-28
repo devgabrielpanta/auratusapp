@@ -203,19 +203,22 @@ export default function AddBooking({
     // adicionar regras de validação
     const requestMethod = drawerAction;
 
-    if (requestMethod === "createBookings") {
-      data.booking_status = "reservado";
-      handleBookings(data, requestMethod);
-      reset({
-        id: "",
-        booking_status: "",
-        guest_name: "",
-        guest_count: "",
-        guest_phone: "",
-        guest_mail: "",
-        booking_source: "",
-      });
-    }
+    const handleStatus =
+    requestMethod === "createBookings" ? "reservado"
+    : requestMethod === "deleteBookings" ? "cancelado" 
+    : data.booking_status;
+
+    data.booking_status = handleStatus;
+    handleBookings(data, requestMethod);
+    reset({
+      id: "",
+      booking_status: "",
+      guest_name: "",
+      guest_count: "",
+      guest_phone: "",
+      guest_mail: "",
+      booking_source: "",
+    });
   };
 
   return (
