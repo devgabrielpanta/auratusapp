@@ -136,7 +136,11 @@ const handleUpdateStatus = (rowId, newStatus) => {
   const updatingBooking = bookingsList.find( ({id}) => id === rowId);
   const oldStatus = updatingBooking.booking_status;
   if (oldStatus != newStatus) {
-    updatingBooking.booking_status = newStatus
+    
+    const bookingTime = dayjs(updatingBooking.booking_time).format("DD/MM/YYYY HH:mm");
+    
+    updatingBooking.booking_time = bookingTime;
+    updatingBooking.booking_status = newStatus;
     handleBookings(updatingBooking, "updateBookings")
   }
 };
@@ -192,7 +196,7 @@ const columns = [
   { field: "id", headerName: "ID", width: 20 },
   { field: "guest_name", headerName: "Guest Name", width: 200 },
   { field: "guest_count", headerName: "Guests", width: 70 },
-  { field: "booking_time", headerName: "Horário", width: 100 },
+  { field: "booking_time", headerName: "Horário", width: 150 },
   { field: "guest_phone", headerName: "Telemóvel", width: 150 },
   { field: "guest_mail", headerName: "Email", width: 200 },
   { field: "booking_source", headerName: "Source", width: 70, renderCell: renderedSource},
