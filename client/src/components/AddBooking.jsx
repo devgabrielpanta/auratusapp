@@ -34,11 +34,12 @@ import LanguageIcon from '@mui/icons-material/Language';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import Slider from '@mui/material/Slider';
 import Grid from '@mui/material/Grid2';
-import GroupsIcon from '@mui/icons-material/Groups';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { MuiTelInput } from 'mui-tel-input'
 import { fontWeight } from "@mui/system";
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
 
 export default function AddBooking({
   bookingsWidth,
@@ -62,6 +63,7 @@ export default function AddBooking({
   const [bookingGuestPhone, setBookingGuestPhone] = useState("");
   const [bookingGuestMail, setBookingGuestMail] = useState("");
   const [bookingSource, setBookingSource] = useState("");
+  const [bookingService, setBookingService] = useState("");
 
   useEffect(() => {
     if(drawerAction != "createBookings") {
@@ -86,13 +88,15 @@ export default function AddBooking({
     }
   }, [drawerAction, editBooking]);
 
-  const bookingService = () => {
+  const handleService = () => {
     const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
     return dayjs(bookingTime).isBefore(breakService) ? "Almoço" : "Jantar"
   };
-
+  
   useEffect(() => {
-    setValue("service", bookingService());
+    const currentService = handleService();
+    setBookingService(currentService)
+    setValue("service", currentService);
   }, [bookingTime, setValue]);
 
   const clearUpdateDrawer = () => {
@@ -147,11 +151,13 @@ export default function AddBooking({
             defaultValue={bookingStatus}
             control={control}
             render={({ field: {value, onChange} }) =>
+              <>
               <Select
+                labelId="status-label"
+                label={"Status"}
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
                 label="Status:"
-                InputLabelProps={{ shrink: true }}
               >
                 <MenuItem value={"reservado"}>reservado</MenuItem>
                 <MenuItem value={"cancelado"}>cancelado</MenuItem>          
@@ -160,6 +166,7 @@ export default function AddBooking({
                 <MenuItem value={"servindo"}>servindo</MenuItem>
                 <MenuItem value={"finalizado"}>finalizado</MenuItem>
               </Select>
+              </>
             }
           />
 
@@ -168,37 +175,47 @@ export default function AddBooking({
     : "";
   };
 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    ...theme.applyStyles('dark', {
+      backgroundColor: '#1A2027',
+    }),
+  }));
+
   const DrawerButton = () => {
-      return drawerAction === "createBookings" ?
-        <Button
+      if (drawerAction === "createBookings") {
+        return <Button
         sx={{ marginLeft: 8, marginTop: 2 }}
         type="submit"
         variant="contained"
         >
         Adicionar Reserva
         </Button>
-      :
-        <Box sx={{display: "inline-flex"}}>
-          <Button
-            sx={{ marginLeft: 2, marginTop: 2, fontSize: "12px" }}
-            type="submit"
-            variant="contained"
-            color="success"
-          >
-            Atualizar Reserva
-          </Button>
-          <Button
-            sx={{ marginLeft: 2, marginTop: 2, fontSize: "12px" }}
-            type="submit"
-            variant="contained"
-            color="error"
-            onClick={
-              setValue("booking_status", "cancelado")
-            }
-          >
-            Deletar Reserva
-          </Button>
-        </Box>
+      } else {
+        return <Box sx={{display: "inline-flex"}}>
+        <Button
+          sx={{ marginLeft: 2, marginTop: 2, fontSize: "12px" }}
+          type="submit"
+          variant="contained"
+          color="success"
+        >
+          Atualizar Reserva
+        </Button>
+        <Button
+          sx={{ marginLeft: 2, marginTop: 2, fontSize: "12px" }}
+          type="submit"
+          variant="contained"
+          color="error"
+          onClick={() => setValue("booking_status", "cancelado")}
+        >
+          Cancelar Reserva
+        </Button>
+      </Box>
+      }
   };
 
   const handleDrawer = async (data) => {
@@ -318,12 +335,10 @@ export default function AddBooking({
             width: 260
         }}
         >
-        <Typography sx={{ fontSize: 14, opacity: 0.8 }} id="guest-label">Guests</Typography>
+        <Typography sx={{ fontSize: 14, opacity: 0.8 }} id="guest-label">Guests:</Typography>
         <Grid container spacing={2} sx={{ alignItems: 'center' }}>
-          <Grid item>
-           <GroupsIcon/>
-          </Grid>
-          <Grid item>
+          <Grid>
+          <Item>
             <Controller
               name="guest_count"
               control={control}
@@ -333,16 +348,17 @@ export default function AddBooking({
                   sx={{ width: 130 }}
                   min={1}
                   max={40}
-                  value={value}
+                  value={Number(value)}
                   onChange={(event, newValue) => {onChange(newValue)}}
                   aria-labelledby="guest-label"
                 />
-              }
-            
+              }            
             />
+          </Item>
 
           </Grid>
-          <Grid item>
+          <Grid>
+          <Item>
             <Controller
               name="guest_count"
               control={control}
@@ -365,6 +381,7 @@ export default function AddBooking({
               }
             
             />
+          </Item>
 
           </Grid>
         </Grid>
@@ -428,12 +445,13 @@ export default function AddBooking({
         <InputLabel sx={{marginRight: 1, fontSize: 14, color: "grey.500" }}>Serviço:</InputLabel>
         <Controller
           name="service"
+          defaultValue={bookingService}
           control={control}
           render={({field:{value}}) =>
             <Input
             sx={{padding: 0, opacity: 0.8}}
             value={value}
-            disable
+            disable="true"
             disableUnderline
             inputProps={{style: { fontSize: 14, color: "grey" }}}
             />

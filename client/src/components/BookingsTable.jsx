@@ -39,7 +39,6 @@ export default function BookingsTable({
   const [mappedRows, setMappedRows] = useState([]);
 
   useEffect(() => {
-    setMappedRows([]);
     const bookingsRows = bookingsList.map((row, index) => ({
       //null list operations ?
       booking_status: row.booking_status,
@@ -53,7 +52,7 @@ export default function BookingsTable({
       service: row.service,
     }));
     setMappedRows(bookingsRows);
-
+    setClickedRow(null);
   }, [bookingsList]);
 
 const renderedSource = (props) => {
@@ -101,7 +100,7 @@ const renderedService = (props) => {
 
 const renderStatusCell = (IconComponent, color, status) => (params) => (
   <ToggleButton
-    key={params.row.id}
+    key={`${params.row.id}-${status}`}
     value={status}
     sx={{
     border: 0,
@@ -158,7 +157,7 @@ const editButton = (rowId) => {
 };
 
 const handleRowClick = (rowId) => {
-  setClickedRow(rowId);
+  clickedRow === rowId ? setClickedRow(null) : setClickedRow(rowId)
 };
 
 const handleEditButton = (rowId) => {
@@ -242,7 +241,7 @@ const columns = [
         getRowSpacing={getRowSpacing}
         sx={{ zIndex: 0 }}
         columnGroupingModel={columnGroupingModel}
-        //onRowClick={(params) => handleRowClick(params.row.id)}
+        onRowClick={(params) => handleRowClick(params.row.id)}
         getRowId={(row) => row.id}
       />
     </Paper>

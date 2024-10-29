@@ -1,7 +1,5 @@
 import api from "../api";
 
-console.log(process.env.API_BOOKINGS_ENDPOINT);
-
 export const getBookings = () => {
   return api.get("/bookings").then((response) => response.data);
 };

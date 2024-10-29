@@ -79,16 +79,25 @@ export default function App() {
         updateBooking(handleData.id, handleData)
         .then((response) => {
 
-          const updatedBooking = response.booking;
-
+          const updatedBooking = {
+            id: response.booking.id,
+            guest_name: response.booking.guest_name,
+            guest_count: response.booking.guest_count,
+            booking_time: response.booking.booking_time,
+            guest_phone: response.booking.guest_phone,
+            guest_mail: response.booking.guest_mail,
+            booking_status: response.booking.booking_status,
+            booking_source: response.booking.booking_source,
+            service: response.booking.service
+          };
+         
           setBookings((prevBookings) => 
-            prevBookings.map((booking) =>
-              booking.id === updatedBooking.id
-              ? { ...updatedBooking }
-              : booking
+            prevBookings.map((booking) => (
+              Number(booking.id) === Number(updatedBooking.id) ? updatedBooking : booking)
             )
           );
           
+          setDrawerAction("createBookings");
           setAlertMessage("success");
           setLoading(false);
         })
