@@ -137,6 +137,7 @@ export default function App() {
         editBooking={editBooking}
         drawerAction={drawerAction}
         changeDrawerState={changeDrawerState}
+        handleBookings={handleBookings}
       />
     </>
   );

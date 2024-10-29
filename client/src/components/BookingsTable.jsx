@@ -33,6 +33,7 @@ export default function BookingsTable({
   editBooking,
   drawerAction,
   changeDrawerState,
+  handleBookings,
 }) {
 
   const [clickedRow, setClickedRow] = useState(null);
@@ -102,6 +103,7 @@ const renderStatusCell = (IconComponent, color, status) => (params) => (
   <ToggleButton
     key={`${params.row.id}-${status}`}
     value={status}
+    onClick={() => handleUpdateStatus(params.row.id, status)}
     sx={{
     border: 0,
     display: "flex",
@@ -129,6 +131,15 @@ const columnGroupingModel = [
     ],
   }
 ];
+
+const handleUpdateStatus = (rowId, newStatus) => {
+  const updatingBooking = bookingsList.find( ({id}) => id === rowId);
+  const oldStatus = updatingBooking.booking_status;
+  if (oldStatus != newStatus) {
+    updatingBooking.booking_status = newStatus
+    handleBookings(updatingBooking, "updateBookings")
+  }
+};
 
 const editButton = (rowId) => {
     return (
