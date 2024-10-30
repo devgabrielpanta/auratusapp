@@ -1,35 +1,46 @@
-import Box from "@mui/material/Box";
-import { useForm, Controller } from "react-hook-form";
-import { TextFieldElement } from "react-hook-form-mui";
+//React imports
 import { useState } from "react";
+//Form imports
+import { useForm, Controller } from "react-hook-form";
+//Material elements and icons
+import Box from "@mui/material/Box";
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Alert, InputAdornment, Typography } from "@mui/material";
+import InputAdornment from '@mui/material/InputAdornment';
+import Alert from "@mui/material/Alert";
+import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+//Firebase imports
+import { auth } from "../../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
 
     const {handleSubmit, setValue, reset, control} = useForm();
-    const [user, setUser] = useState("");
+    const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const [showPass, setShowPass] = useState(false);
     const [loginError, setLoginError] = useState(false);
 
     const handleShowPass = () => {
-        setShowPass((show) => !show)
+        setShowPass((show) => !show);
     };
 
     const handleLogin = (data) => {
-        //verificação do processamento do formulário
-        
-        console.log(`Tentativa de acesso do usuário: ${data.user} com a senha: ${data.pass}`)
-        //se houver algum erro => setLoginError(true);
+        signInWithEmailAndPassword(auth, data.email, data.pass)
+            .then((userCredential) => {
+                console.log(userCredential);
+            })
+            .catch((error) => {
+                setLoginError(true);
+                console.error(error);
+            })
 
         //limpar os dados do formulário após o login
         reset(
-            setValue("user", ""),
+            setValue("email", ""),
             setValue("pass", ""),
         );
     };
@@ -55,10 +66,10 @@ export default function Login() {
                 </Typography>
                 
                 <Controller
-                    name="user"
-                    defaultValue={user}
+                    name="email"
+                    defaultValue={email}
                     control={control}
-                    onChange={(value) => {setUser(value)}}
+                    onChange={(value) => {setEmail(value)}}
                     render={ ( { field: {value, onChange} } ) =>
                         <TextField
                             sx={{

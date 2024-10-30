@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
-import Login from "./components/Login";
+import Login from "./components/auth/Login";
 import { getBookings, addBooking, updateBooking } from "./services/bookings";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js"
