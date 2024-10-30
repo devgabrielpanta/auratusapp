@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import bookingsRoutes from "./routes/bookingsRoutes.js";
+import authRoutes from "./routes/authRoutes.js"
 import dotenv from "dotenv";
 const port = 3001;
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // app routes
 app.use("/bookings", bookingsRoutes);
+app.use("/login", authRoutes);
 
 // Error handler for uncaught exceptions
 // app.use((err, req, res, next) => {
