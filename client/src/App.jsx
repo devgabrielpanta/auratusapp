@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
+import Login from "./components/Login";
 import { getBookings, addBooking, updateBooking } from "./services/bookings";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js"
@@ -12,6 +13,7 @@ const drawerWidth = 400;
 const navHeight = 70;
 
 export default function App() {
+  /*
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [alertMessage, setAlertMessage] = useState("hidden");
@@ -113,9 +115,12 @@ export default function App() {
     setAlertMessage("hidden");
   };
 
+  */
+
   return (
     <>
-      {/* Nesse caso é correto usar o fragment para retornar mais de um elemento */}
+      <Login />
+      {/* 
       <CssBaseline />
       <BookingsHeader headerWidth={drawerWidth} headerHeight={navHeight} />
       <AddBooking
@@ -139,6 +144,7 @@ export default function App() {
         changeDrawerState={changeDrawerState}
         handleBookings={handleBookings}
       />
+      */}
     </>
   );
 }
