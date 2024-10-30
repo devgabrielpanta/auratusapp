@@ -14,10 +14,9 @@ const create = async (bookingData) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
   
   dayjs.extend(customParseFormat);
-  const bookingTime =
-  dayjs(bookingData.booking_time, "DD/MM/YYYY HH:mm")
-  .set("second", 0)
-  .format("YYYY-MM-DD HH:mm:ss");
+  const bookingTime = dayjs(bookingData.booking_time, "DD/MM/YYYY HH:mm")
+    .set("second", 0)
+    .format("YYYY-MM-DD HH:mm:ss");
   
   const values = [
     bookingData.guest_name,
@@ -32,7 +31,7 @@ const create = async (bookingData) => {
 
   try {
     const [result] = await db.promise().query(query, values);
-    const newBooking = {
+    return {
       id: result.insertId,
       guest_name: bookingData.guest_name,
       guest_count: bookingData.guest_count,
@@ -42,9 +41,7 @@ const create = async (bookingData) => {
       booking_status: bookingData.booking_status,
       booking_source: bookingData.booking_source,
       service: bookingData.service,
-    }
-    return newBooking;
-
+    };
   } catch (err) {
     console.log("Erro ao criar uma nova reserva: ", err);
     throw err;
@@ -91,7 +88,7 @@ const update = async (id, bookingData) => {
 
   try {
     const [result] = await db.promise().query(query, values);
-    const updatedBooking = {
+    return {
       id: id,
       guest_name: bookingData.guest_name,
       guest_count: bookingData.guest_count,
@@ -102,7 +99,6 @@ const update = async (id, bookingData) => {
       booking_source: bookingData.booking_source,
       service: bookingData.service,
     }
-    return updatedBooking;
   } catch (err) {
     console.error("Erro ao executar a função update: ", err)
     throw err;
