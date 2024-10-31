@@ -16,7 +16,7 @@ app.use(express.json());
 
 // app routes
 app.use("/bookings", bookingsRoutes);
-app.use("/login", authRoutes);
+app.use("/auth", authRoutes);
 
 // Error handler for uncaught exceptions
 // app.use((err, req, res, next) => {
