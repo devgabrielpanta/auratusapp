@@ -4,11 +4,18 @@ import { auth } from "../firebase.js"
 import { getAuth } from 'firebase-admin/auth';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import serviceAccount from "../firebase-credential.json" assert { type: "json" };
+import bcrypt from "bcrypt";
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
+// Usar o código a seguir para encryptar a pass no react
+// https://kennethscoggins.medium.com/how-to-use-mysql-password-encryption-with-nodejs-express-and-bcrypt-ad9ede661109
+/** 
+const saltRounds = 10;
+const encryptedPassword = await bcrypt.hash(pass, saltRounds);
+*/
 
 const generateToken = async (userId) => {
     try {
