@@ -119,7 +119,7 @@ export default function App() {
 
   return (
     <>
-      <Login />
+       <Login />
       {/* 
       <CssBaseline />
       <BookingsHeader headerWidth={drawerWidth} headerHeight={navHeight} />

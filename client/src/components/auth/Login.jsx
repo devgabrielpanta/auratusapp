@@ -12,9 +12,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-//Firebase imports
-import { auth } from "../../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+//Auth imports
+import { authLogin } from "../../services/auth";
+import Cookies from 'js-cookie';
 
 export default function Login() {
 
@@ -28,10 +28,14 @@ export default function Login() {
         setShowPass((show) => !show);
     };
 
-    const handleLogin = (data) => {
-        signInWithEmailAndPassword(auth, data.email, data.pass)
-            .then((userCredential) => {
-                console.log(userCredential);
+    const handleLogin = async (data) => {
+
+        // fazer o request
+        authLogin(data.email, data.pass)
+            .then((userToken) => {
+                Cookies.set('access_token', userToken, { expires: 0.5, secure: true });
+                // setar o context
+                // redirecionar
             })
             .catch((error) => {
                 setLoginError(true);
