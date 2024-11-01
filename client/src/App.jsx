@@ -1,5 +1,5 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useEffect } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
@@ -12,7 +12,12 @@ import customParseFormat from "dayjs/plugin/customParseFormat.js"
 const drawerWidth = 400;
 const navHeight = 70;
 
+export const AuthContext = createContext();
+
 export default function App() {
+  
+  const [signedIn, setSignedIn] = useState(false);
+  
   /*
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
@@ -119,7 +124,9 @@ export default function App() {
 
   return (
     <>
+      <AuthContext.Provider value={[signedIn, setSignedIn]}>
        <Login />
+      </AuthContext.Provider>
       {/* 
       <CssBaseline />
       <BookingsHeader headerWidth={drawerWidth} headerHeight={navHeight} />

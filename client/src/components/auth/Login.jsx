@@ -1,5 +1,5 @@
 //React imports
-import { useState } from "react";
+import { useContext, useState } from "react";
 //Form imports
 import { useForm, Controller } from "react-hook-form";
 //Material elements and icons
@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 //Auth imports
 import { authLogin } from "../../services/auth";
 import Cookies from 'js-cookie';
+import { AuthContext } from "../../App";
 
 export default function Login() {
 
@@ -23,6 +24,7 @@ export default function Login() {
     const [pass, setPass] = useState("");
     const [showPass, setShowPass] = useState(false);
     const [loginError, setLoginError] = useState(false);
+    const [signedIn, setSignedIn] = useContext(AuthContext);
 
     const handleShowPass = () => {
         setShowPass((show) => !show);
@@ -34,9 +36,10 @@ export default function Login() {
         authLogin(data.email, data.pass)
             .then((userToken) => {
                 Cookies.set('access_token', userToken, { expires: 0.5, secure: true });
-                // setar o context
+                setSignedIn(true);
                 // redirecionar
             })
+            .then(signedIn === true ? console.log("Login realizado com sucesso") : console.log("Login com problema") )
             .catch((error) => {
                 setLoginError(true);
                 console.error(error);
