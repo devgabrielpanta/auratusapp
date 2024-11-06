@@ -1,12 +1,11 @@
 import pool from "../db.js";
 import dayjs from "dayjs"
-import customParseFormat from "dayjs/plugin/customParseFormat.js"
 
 const db = pool;
 
 const dbName = process.env.DB_DBNAME_AUTH;
 
-const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email) => {
 
     const query = `SELECT * FROM ${dbName} WHERE email = "${email}"`;
 
@@ -25,20 +24,37 @@ const getUserByEmail = async (email) => {
     }    
 };
 
-const updateToken = async (uid, access_token, auth_time) => {
-
-    const fields = "access_token = ?, auth_time = ?";
+export const setSignInTokens = async (idToken, refreshToken, uid) => {
+    const fields = "refresh_token = ?, id_token = ?, last_login = ?, token_expiration = ?";
     const query = `UPDATE ${dbName} SET ${fields} WHERE uid = "${uid}"`;
-    const values = [access_token, auth_time];
 
-    try {
-        const [result] = await db.promise().query(query, values)
-        return result
-    } catch (error) {
-        console.log("Erro ao atualizar o access_token: ", error);
-        throw error
-    }
-}
+    const loginDate = dayjs().format("YYYY-MM-DD HH:mm:ss");
+    const tokenExpiration = dayjs(loginDate).add(1, "hour").format("YYYY-MM-DD HH:mm:ss");
 
+    const values = [refreshToken, idToken, loginDate, tokenExpiration];
 
-export default { getUserByEmail, updateToken };
+    db.promise().query(query, values)
+        .then((result) => {
+            return result
+        })
+        .catch((error) => {
+            console.log("Erro ao atualizar os tokens de login: ", error);
+            throw error
+        })
+};
+
+export const setIdToken = async (idToken, uid) => {
+    const fields = "id_token = ?";
+    const query = `UPDATE ${dbName} SET ${fields} WHERE uid = "${uid}"`;
+
+    const values = [idToken];
+
+    db.promise().query(query, values)
+        .then((result) => {
+            return result
+        })
+        .catch((error) => {
+            console.log("Erro ao atualizar o ID Token: ", error);
+            throw error
+        })
+};

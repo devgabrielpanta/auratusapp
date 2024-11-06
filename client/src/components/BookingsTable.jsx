@@ -31,7 +31,6 @@ export default function BookingsTable({
   bookingsList,
   beginUpdate,
   editBooking,
-  drawerAction,
   changeDrawerState,
   handleBookings,
 }) {

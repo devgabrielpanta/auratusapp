@@ -1,6 +1,8 @@
-import ReactDOM from "react-dom/client";
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
 import App from "./App";
-import "bootstrap/dist/css/bootstrap.css";
 
-// Stric Mode removido temporariamente pois estava fazendo 2 chamadas simultaneas e derrubando o servidor
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+//StrictMode estava dando problema de ref
+ReactDOM.createRoot(document.getElementById("root")).render(
+    <App />
+);

@@ -13,43 +13,40 @@ import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 //Auth imports
-import { authLogin } from "../../services/auth";
-import Cookies from 'js-cookie';
-import { AuthContext } from "../../App";
+import { authLogin } from "../services/auth";
+import { AuthContext } from "../auth/AuthProvider";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
-
+    //form states
     const {handleSubmit, setValue, reset, control} = useForm();
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const [showPass, setShowPass] = useState(false);
     const [loginError, setLoginError] = useState(false);
-    const [signedIn, setSignedIn] = useContext(AuthContext);
+    //AuthProvider
+    const {setUser, setSignedIn} = useContext(AuthContext);
 
     const handleShowPass = () => {
         setShowPass((show) => !show);
     };
 
     const handleLogin = async (data) => {
-
-        // fazer o request
         authLogin(data.email, data.pass)
-            .then((userToken) => {
-                Cookies.set('access_token', userToken, { expires: 0.5, secure: true });
+            .then(() => {
+                setUser(data.email);
                 setSignedIn(true);
-                // redirecionar
+                reset(
+                    setValue("email", ""),
+                    setValue("pass", ""),
+                );
+                return <Navigate to={"/app"} replace/>
             })
-            .then(signedIn === true ? console.log("Login realizado com sucesso") : console.log("Login com problema") )
             .catch((error) => {
                 setLoginError(true);
                 console.error(error);
+                return;
             })
-
-        //limpar os dados do formulário após o login
-        reset(
-            setValue("email", ""),
-            setValue("pass", ""),
-        );
     };
 
     return (
@@ -154,4 +151,4 @@ export default function Login() {
             </Box>
         </form>        
     );
-}
+};

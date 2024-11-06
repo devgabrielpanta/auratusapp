@@ -4,6 +4,8 @@ import cors from "cors";
 import bookingsRoutes from "./routes/bookingsRoutes.js";
 import authRoutes from "./routes/authRoutes.js"
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+
 const port = 3001;
 
 // eslint-disable-next-line no-undef
@@ -13,6 +15,7 @@ dotenv.config();
 const app = express();
 app.use(cors({ credentials: true, origin: process.env.CLIENT_DOMAIN }));
 app.use(express.json());
+app.use(cookieParser());
 
 // app routes
 app.use("/bookings", bookingsRoutes);

@@ -1,24 +1,27 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import { createContext, useContext, useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
-import Login from "./components/auth/Login";
 import { getBookings, addBooking, updateBooking } from "./services/bookings";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js"
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import { AuthProvider } from "./auth/AuthProvider";
+import Protected from "./auth/Protected";
+//pages
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+
 
 const drawerWidth = 400;
 const navHeight = 70;
 
-export const AuthContext = createContext();
-
 export default function App() {
-  
-  const [signedIn, setSignedIn] = useState(false);
-  
-  /*
+    
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [alertMessage, setAlertMessage] = useState("hidden");
@@ -120,38 +123,53 @@ export default function App() {
     setAlertMessage("hidden");
   };
 
-  */
-
+  const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Home />,
+    },
+    {
+        path: "/app",
+        element: (
+          <>
+            <Protected>
+            <CssBaseline />
+            <BookingsHeader headerWidth={drawerWidth} headerHeight={navHeight} />
+            <AddBooking
+              bookingsWidth={drawerWidth}
+              handleBookings={handleBookings}
+              alertParams={alertMessage}
+              closeParams={closeAlert}
+              drawerAction={drawerAction}
+              changeDrawerState={changeDrawerState}
+              editBooking={editBooking}
+              bookingsList={bookings}
+            />
+            <BookingsTable
+              tableWidth={drawerWidth}
+              tableMt={navHeight}
+              loading={loading}
+              bookingsList={bookings}
+              beginUpdate={beginUpdate}
+              editBooking={editBooking}
+              changeDrawerState={changeDrawerState}
+              handleBookings={handleBookings}
+            />
+            </Protected>
+         </>
+        ),
+    },
+    {
+        path: "/login",
+        element: (
+          <Login />
+        ),
+    },
+]);
+  
   return (
-    <>
-      <AuthContext.Provider value={[signedIn, setSignedIn]}>
-       <Login />
-      </AuthContext.Provider>
-      {/* 
-      <CssBaseline />
-      <BookingsHeader headerWidth={drawerWidth} headerHeight={navHeight} />
-      <AddBooking
-        bookingsWidth={drawerWidth}
-        handleBookings={handleBookings}
-        alertParams={alertMessage}
-        closeParams={closeAlert}
-        drawerAction={drawerAction}
-        changeDrawerState={changeDrawerState}
-        editBooking={editBooking}
-        bookingsList={bookings}
-      />
-      <BookingsTable
-        tableWidth={drawerWidth}
-        tableMt={navHeight}
-        loading={loading}
-        bookingsList={bookings}
-        beginUpdate={beginUpdate}
-        editBooking={editBooking}
-        drawerAction={drawerAction}
-        changeDrawerState={changeDrawerState}
-        handleBookings={handleBookings}
-      />
-      */}
-    </>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 }
