@@ -1,5 +1,6 @@
 //React imports
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom'
 //Form imports
 import { useForm, Controller } from "react-hook-form";
 //Material elements and icons
@@ -24,27 +25,31 @@ export default function Login() {
     const [pass, setPass] = useState("");
     const [showPass, setShowPass] = useState(false);
     const [loginError, setLoginError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     //AuthProvider
-    const {setUser, setSignedIn} = useContext(AuthContext);
+    const {setUser, setSignedIn, signedIn} = useContext(AuthContext);
+
+    const navigate = useNavigate();
 
     const handleShowPass = () => {
         setShowPass((show) => !show);
     };
 
     const handleLogin = async (data) => {
+
         authLogin(data.email, data.pass)
             .then(() => {
                 setUser(data.email);
                 setSignedIn(true);
+                //salvar nos cookies
                 reset(
                     setValue("email", ""),
                     setValue("pass", ""),
                 );
-                return <Navigate to={"/app"} replace/>
             })
             .catch((error) => {
                 setLoginError(true);
-                console.error(error);
+                setErrorMessage(error.response.data)
                 return;
             })
     };
@@ -141,14 +146,12 @@ export default function Login() {
 
                 {loginError ?
                 <Alert severity="error" onClose={() => {setLoginError(false)}}>
-                    Não foi possível autenticar o seu acesso, tente novamente ou entre em contato com o suporte.
+                    {errorMessage}, tente novamente ou entre em contato com o suporte.
                 </Alert>
                 
                 : ""
                 }
-
-
             </Box>
-        </form>        
+        </form>      
     );
 };

@@ -15,12 +15,10 @@ export const getUserByEmail = async (email) => {
         if (result.length === 1 && result[0].email === email) {
             return result;
         } else {
-            console.error("Falha na autenticação do email");
-            throw new Error("Email não autorizado");
+            throw new Error("Login inválido");
         }
     } catch (error) {
-        console.error("Falha na autenticação do email: ", error);
-        throw error;
+        throw new Error(error.message);
     }    
 };
 
@@ -34,12 +32,12 @@ export const setSignInTokens = async (idToken, refreshToken, uid) => {
     const values = [refreshToken, idToken, loginDate, tokenExpiration];
 
     db.promise().query(query, values)
-        .then((result) => {
-            return result
+        .then(() => {
+            return idToken;
         })
         .catch((error) => {
             console.log("Erro ao atualizar os tokens de login: ", error);
-            throw error
+            throw new Error(error.message);
         })
 };
 
@@ -51,10 +49,10 @@ export const setIdToken = async (idToken, uid) => {
 
     db.promise().query(query, values)
         .then((result) => {
-            return result
+            return result;
         })
         .catch((error) => {
             console.log("Erro ao atualizar o ID Token: ", error);
-            throw error
+            throw new Error(error.message);
         })
 };

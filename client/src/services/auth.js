@@ -21,8 +21,11 @@ export const authSession = async () => {
         {},
         {
             withCredentials: true,
-        }).then((response) => {
-        return response
-        }
-    );
+    })
+        .then((response) => {
+            return response;
+        })
+        .catch((error) => {
+            throw new Error(error);
+        })
 };

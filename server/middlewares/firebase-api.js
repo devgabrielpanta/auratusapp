@@ -13,33 +13,27 @@ const api_key = process.env.FIREBASE_APIKEY;
 // Sign in with email / password: https://firebase.google.com/docs/reference/rest/auth#section-sign-in-email-password
 export const signInWithEmail = async (email, pass) => {
     const endpoint = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${api_key}`;
-
-    axios.post(endpoint, {
-        email: email,
-        password: pass,
-        returnSecureToken: true
-    })
-    .then((response) => {
+    try {
+        const response = await axios.post(endpoint, {
+            email: email,
+            password: pass,
+            returnSecureToken: true
+        });
         const idToken = response.data.idToken;
         const refreshToken = response.data.refreshToken;
         const uid = response.data.localId;
-        
-        authModels.setSignInTokens(idToken, refreshToken, uid)
-            .then (() => {
-                return idToken
-            })
-            .catch((error) => {
-                throw error;
-            })
-    })
-    .catch((error) => {
-        throw error;
-    })
+        const setToken = await authModels.setSignInTokens(idToken, refreshToken, uid);
+        return idToken
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
 
 export const verifyToken = async (idToken) => {
+    console.log("verificação de token iniciada")
     getAuth().verifyIdToken(idToken)
         .then((decodedToken) => {
+            console.log("decodedToken:", decodedToken)
             return decodedToken;
         })
         .catch((error) => {
@@ -60,13 +54,13 @@ export const updateIdToken = async (refreshToken, next) => {
         const uid = response.data.user_id;
         authModels.setIdToken(idToken, uid)
             .then(() => {
-                return idToken
+                return idToken;
             })
             .catch((error) => {
-                throw error.message;
+                throw new Error(error.message);
             })
     })
     .catch((error) => {
-        throw error.message;
+        throw new Error(error.message);
     })
 };
