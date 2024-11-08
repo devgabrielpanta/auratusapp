@@ -11,8 +11,10 @@ export const authLogin = async (email, pass) => {
             withCredentials: true
         }).then((response) => {
         return response.data
-        }
-    );
+        })
+        .catch((error) => {
+            throw new Error(error);
+        })
 };
 
 export const authSession = async () => {

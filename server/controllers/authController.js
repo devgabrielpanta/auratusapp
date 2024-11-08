@@ -10,7 +10,6 @@ export const authValidation = async (req, res) => {
     const idToken = req.cookies.id_token;
     
     if(!idToken || !email) {
-        
         return res.status(401).send({ error: "email e/ou token de acessos inválidos" });
     }
 
@@ -79,7 +78,10 @@ export const handleLogin = async (req, res) => {
             maxAge: 60 * 60 * 1000,
             sameSite: "Strict",
         });
-        return res.status(201).send("Login realizado com sucesso");
+        return res.status(201).send({
+            user: email,
+            message: "Login realizado com sucesso"
+        });
     } catch (error) {
         return res.status(500).send(`${error.message}`);
     }

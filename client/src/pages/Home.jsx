@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import { AuthContext } from "../auth/AuthProvider";
 import LoadingOverlay from "../components/LoadingOverlay";
 import { authSession } from "../services/auth";
+import dayjs from "dayjs";
 
 export default function Home() {
     const { signedIn, setSignedIn, setUser } = useContext(AuthContext);
@@ -14,23 +15,24 @@ export default function Home() {
         try {
             const response = await authSession();
             if (response.status === 200) {
+                localStorage.setItem("user", response.data.user);
+                localStorage.setItem("auth_time", dayjs().format("YYYY-MM-DD HH:mm:ss"));
                 setUser(response.data.user);
                 setSignedIn(true);
-                setRedirectPath("/app");
-                //navigate("/app");
+                navigate("/app");
             } else {
-                setRedirectPath("/login");
+                navigate("/login");
                 console.log("redirecionando para o login");
             }
         } catch (error) {
             console.log(error);
-            setRedirectPath("/login");
+            navigate("/login");
         }
     };
 
     useEffect(() => {
         auth();
-    }, [signedIn]);
+    }, []);
 
     return <LoadingOverlay />
 };

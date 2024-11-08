@@ -30,10 +30,8 @@ export const signInWithEmail = async (email, pass) => {
 };
 
 export const verifyToken = async (idToken) => {
-    console.log("verificação de token iniciada")
     getAuth().verifyIdToken(idToken)
         .then((decodedToken) => {
-            console.log("decodedToken:", decodedToken)
             return decodedToken;
         })
         .catch((error) => {

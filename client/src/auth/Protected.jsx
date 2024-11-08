@@ -1,13 +1,23 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "./AuthProvider";
+import dayjs from "dayjs";
 
 export default function Protected({children}) {
-    const {signIn} = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
 
-    if(!signIn) {
-        return <Navigate to="/" replace/>
-    } else {
-        return children;
-    }
+    const ProtectedPage = () => {
+        const authTime = dayjs(localStorage.getItem("auth_time"));
+        const remainingTime = dayjs(authTime - dayjs()).get("second");
+
+        if(!authTime || remainingTime < 10) {
+            return <Navigate to="/" replace/>
+        } else if (localStorage.getItem("user").length < 10) {
+            return <Navigate to="/" replace/>
+        } else {
+            return children;
+        }
+    };
+    
+    return <ProtectedPage />
 };

@@ -1,6 +1,7 @@
 //React imports
 import { useContext, useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import dayjs from "dayjs";
 //Form imports
 import { useForm, Controller } from "react-hook-form";
 //Material elements and icons
@@ -38,18 +39,20 @@ export default function Login() {
     const handleLogin = async (data) => {
 
         authLogin(data.email, data.pass)
-            .then(() => {
-                setUser(data.email);
+            .then((response) => {
+                localStorage.setItem("user", response.user);
+                localStorage.setItem("auth_time", dayjs().format("YYYY-MM-DD HH:mm:ss"));
+                setUser(response.user);
                 setSignedIn(true);
-                //salvar nos cookies
                 reset(
                     setValue("email", ""),
                     setValue("pass", ""),
                 );
+                navigate("/app");
             })
             .catch((error) => {
                 setLoginError(true);
-                setErrorMessage(error.response.data)
+                setErrorMessage(error)
                 return;
             })
     };
