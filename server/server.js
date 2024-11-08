@@ -17,9 +17,21 @@ app.use(cors({ credentials: true, origin: process.env.CLIENT_DOMAIN }));
 app.use(express.json());
 app.use(cookieParser());
 
-// app routes
-app.use("/bookings", bookingsRoutes);
+const protectedRoute = (req, res, next) => {
+  const email = req.cookies.user;
+  const idToken = req.cookies.id_token;
+
+  if (!email || !idToken) {
+    return res.status(401).send("Autentique a sessão antes de prosseguir");
+  } else {
+    return next();
+  }
+};
+
 app.use("/auth", authRoutes);
+app.use(protectedRoute);
+app.use("/bookings", bookingsRoutes);
+
 
 // Error handler for uncaught exceptions
 // app.use((err, req, res, next) => {
