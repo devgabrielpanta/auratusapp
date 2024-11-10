@@ -20,12 +20,16 @@ const getAllBookings = async (req, res) => {
 };
 
 const createBooking = async (req, res) => {
+  const user = req.body.user;
+  if (!user) {
+    res.status(403).send({message: "Autentique a sessão antes de acessar as reservas"});
+  }
   try {
-    const newBooking = req.body;
+    const newBooking = req.body.bookings;
     // falha de segurança grave: o usuário pode enviar qualquer campo no corpo da requisição
     // o ideal é validar os campos antes de inserir no banco
     // gps: implementar as validações após com o Zod para teste de produção.
-    const newBookingData = await bookingsModel.create(newBooking);
+    const newBookingData = await bookingsModel.create(newBooking, user);
     res.status(201).json({
       message: "Reserva criada com sucesso",
       booking: newBookingData
