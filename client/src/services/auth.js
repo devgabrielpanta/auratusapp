@@ -17,10 +17,7 @@ export const authLogin = async (email, pass) => {
 export const authSession = async () => {
     return api.post(
         "/auth",
-        {},
-        {
-            withCredentials: true,
-    })
+        {})
         .then((response) => {
             return response;
         })
