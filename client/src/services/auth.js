@@ -6,9 +6,6 @@ export const authLogin = async (email, pass) => {
         {
             email: email,
             pass: pass
-        },
-        {
-            withCredentials: true
         }).then((response) => {
         return response.data
         })
