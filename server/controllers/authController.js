@@ -19,6 +19,6 @@ export const handleLogin = async (req, res) => {
             return res.status(201).send({token: id_token});
         })
         .catch((error) => {
-            return res.status(400).send("Email/Senhal inválidos");
+            return res.status(400).send("Email/Senha inválidos");
         });
 };

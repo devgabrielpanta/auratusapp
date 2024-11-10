@@ -13,7 +13,7 @@ export const authLogin = async (email, pass) => {
         return response.data
         })
         .catch((error) => {
-            throw new Error(error);
+            throw new Error("Email/Senha inválidos");
         })
 };
 

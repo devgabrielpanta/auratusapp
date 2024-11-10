@@ -28,7 +28,7 @@ export default function Login() {
     const [loginError, setLoginError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     //AuthProvider
-    const {setUser, setSignedIn, signedIn} = useContext(AuthContext);
+    const {setSignedIn} = useContext(AuthContext);
 
     const navigate = useNavigate();
 
@@ -40,9 +40,7 @@ export default function Login() {
 
         authLogin(data.email, data.pass)
             .then((response) => {
-                localStorage.setItem("user", response.user);
-                localStorage.setItem("auth_time", dayjs().format("YYYY-MM-DD HH:mm:ss"));
-                setUser(response.user);
+                localStorage.setItem("access_token", response.token);
                 setSignedIn(true);
                 reset(
                     setValue("email", ""),
@@ -52,7 +50,7 @@ export default function Login() {
             })
             .catch((error) => {
                 setLoginError(true);
-                setErrorMessage(error)
+                setErrorMessage("Email/Senha inválidos")
                 return;
             })
     };

@@ -7,10 +7,8 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState();
     const [signedIn, setSignedIn] = useState();
 
-    const 
-
     useEffect(() => {
-        setUser(localStorage.getItem("user"));
+        //setUser(localStorage.getItem("user"));
     }, [])
 
     const values = {
