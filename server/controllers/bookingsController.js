@@ -1,16 +1,17 @@
 import bookingsModel from "../models/bookingsModel.js";
 
-//verificar se tem um res.locals.newIdToken para devolver no res 
-
-// exemplo de como usar import/export
 const getAllBookings = async (req, res) => {
   const user = req.body.user;
   if (!user) {
-    res.status(403).send({message: "Autentique a sessão antes de acessar as reservas"});
+    return res.status(403).send({message: "Autentique a sessão antes de acessar as reservas"});
   }
   try {
     const bookings = await bookingsModel.getAll(user);
-    res.status(200).json(bookings);
+    const response = { bookings: bookings };
+    if (res.locals.newIdToken) {
+      response.newIdToken = res.locals.newIdToken;
+    };
+    res.status(200).json(response);
   } catch (err) {
     res.status(500).send(`Erro ao buscar a lista de reservas: ${err}`);
     // o erro não pode ser enviado diretamente para o cliente
@@ -22,7 +23,7 @@ const getAllBookings = async (req, res) => {
 const createBooking = async (req, res) => {
   const user = req.body.user;
   if (!user) {
-    res.status(403).send({message: "Autentique a sessão antes de acessar as reservas"});
+    return res.status(403).send({message: "Autentique a sessão antes de acessar as reservas"});
   }
   try {
     const newBooking = req.body.bookings;
@@ -30,12 +31,14 @@ const createBooking = async (req, res) => {
     // o ideal é validar os campos antes de inserir no banco
     // gps: implementar as validações após com o Zod para teste de produção.
     const newBookingData = await bookingsModel.create(newBooking, user);
-    res.status(201).json({
+    const response = {
       message: "Reserva criada com sucesso",
-      booking: newBookingData
-    });
-    // a resposta deve conter a reserva criada
-    //gps: no frontend eu altero o useState para loading, o que executa a função de getAllBookings e trás a reserva nova para as views, como melhorar?
+      booking: newBookingData,
+    };
+    if (res.locals.newIdToken) {
+      response.newIdToken = res.locals.newIdToken;
+    };
+    res.status(201).json(response);
   } catch (err) {
     res.status(500).send(`Erro ao criar a reserva: ${err}`);
   }
@@ -45,6 +48,7 @@ const updateBooking = async (req, res) => {
   try {
     const { id } = req.params;
     // falha de segurança grave: o usuário pode enviar qualquer campo no corpo da requisição
+    // futuramente adicionar um filtro para ver se o usuário está editando a sua própria reserva
     const updateBooking = req.body;
     const newBookingData = await bookingsModel.update(id, updateBooking);
     res.status(201).json({

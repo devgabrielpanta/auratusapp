@@ -9,12 +9,7 @@ export const getUserByEmail = async (email) => {
 
     try {
         const [result] = await db.promise().query(query);
-
-        if (result.length === 1 && result[0].email === email) {
-            return result;
-        } else {
-            throw new Error("Login inválido");
-        }
+        return result[0].firebase_token;
     } catch (error) {
         throw new Error(error.message);
     }    
