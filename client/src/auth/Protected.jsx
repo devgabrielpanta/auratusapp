@@ -4,7 +4,7 @@ import { AuthContext } from "./AuthProvider";
 import dayjs from "dayjs";
 
 export default function Protected({children}) {
-    const {user} = useContext(AuthContext);
+    const {signedIn} = useContext(AuthContext);
 
     const ProtectedPage = () => {
         const authTime = dayjs(localStorage.getItem("auth_time"));

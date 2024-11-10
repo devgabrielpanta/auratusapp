@@ -4,16 +4,9 @@ import dayjs from "dayjs";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState();
-    const [signedIn, setSignedIn] = useState();
-
-    useEffect(() => {
-        //setUser(localStorage.getItem("user"));
-    }, [])
-
+    const [signedIn, setSignedIn] = useState(localStorage.getItem("access_token") ? true : false);
+    
     const values = {
-        user: user,
-        setUser: setUser,
         signedIn: signedIn,
         setSignedIn: setSignedIn,
     };
