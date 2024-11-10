@@ -5,6 +5,7 @@ import bookingsRoutes from "./routes/bookingsRoutes.js";
 import authRoutes from "./routes/authRoutes.js"
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import { protectedRoute } from "./middlewares/authProvider.js";
 
 const port = 3001;
 
@@ -16,17 +17,6 @@ const app = express();
 app.use(cors({ credentials: true, origin: process.env.CLIENT_DOMAIN }));
 app.use(express.json());
 app.use(cookieParser());
-
-const protectedRoute = (req, res, next) => {
-  const email = req.cookies.user;
-  const idToken = req.cookies.id_token;
-
-  if (!email || !idToken) {
-    return res.status(401).send("Autentique a sessão antes de prosseguir");
-  } else {
-    return next();
-  }
-};
 
 app.use("/auth", authRoutes);
 app.use(protectedRoute);
