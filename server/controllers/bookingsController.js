@@ -2,6 +2,8 @@ import bookingsModel from "../models/bookingsModel.js";
 
 // exemplo de como usar import/export
 const getAllBookings = async (req, res) => {
+  res.status(200).send(req.body);
+  /**
   console.log("função getAllBookings iniciada no servidor");
   try {
     const bookings = await bookingsModel.getAll();
@@ -12,6 +14,7 @@ const getAllBookings = async (req, res) => {
     // o ideal é tratar o erro e enviar uma mensagem amigável e padronizada
     // gps: estou enviando o erro para visualizar o problema, para produção pensei em criar um log de auditoria. 
   }
+  */
 };
 
 const createBooking = async (req, res) => {
