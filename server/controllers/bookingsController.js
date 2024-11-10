@@ -1,12 +1,15 @@
 import bookingsModel from "../models/bookingsModel.js";
 
+//verificar se tem um res.locals.newIdToken para devolver no res 
+
 // exemplo de como usar import/export
 const getAllBookings = async (req, res) => {
-  res.status(200).send(req.body);
-  /**
-  console.log("função getAllBookings iniciada no servidor");
+  const user = req.body.user;
+  if (!user) {
+    res.status(403).send({message: "Autentique a sessão antes de acessar as reservas"});
+  }
   try {
-    const bookings = await bookingsModel.getAll();
+    const bookings = await bookingsModel.getAll(user);
     res.status(200).json(bookings);
   } catch (err) {
     res.status(500).send(`Erro ao buscar a lista de reservas: ${err}`);
@@ -14,7 +17,6 @@ const getAllBookings = async (req, res) => {
     // o ideal é tratar o erro e enviar uma mensagem amigável e padronizada
     // gps: estou enviando o erro para visualizar o problema, para produção pensei em criar um log de auditoria. 
   }
-  */
 };
 
 const createBooking = async (req, res) => {

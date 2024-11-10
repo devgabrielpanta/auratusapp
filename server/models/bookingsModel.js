@@ -4,7 +4,9 @@ import customParseFormat from "dayjs/plugin/customParseFormat.js"
 
 const db = pool;
 
-const dbName = process.env.DB_DBNAME;
+const dbName = process.env.DB_BOOKINGS;
+const dbUsers = process.env.DB_USERS;
+const dbRestaurants = process.env.DB_RESTAURANTS;
 
 
 // (C)reate bookings:
@@ -48,10 +50,14 @@ const create = async (bookingData) => {
   }
 };
 
-
 // (R)ead bookings:
-const getAll = async () => {
-  const query = `SELECT * FROM ${dbName}`;
+const getAll = async (user) => {
+  const query =
+  `SELECT b.*
+  FROM ${dbName} b
+  JOIN ${dbRestaurants} r ON b.restaurant_id = r.id
+  JOIN ${dbUsers} u ON r.user_id = u.id
+  WHERE u.firebase_id = "${user}"`;
 
   try {
     const [result] = await db.promise().query(query);

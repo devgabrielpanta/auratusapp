@@ -1,5 +1,7 @@
-import { auth } from "../firebase.js";
+//firebase web
+import { webAuth } from "../firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { setFirebaseToken } from "../models/authModel.js";
 
 export const handleLogin = async (req, res) => {
     const email = req.body.email;
@@ -8,10 +10,13 @@ export const handleLogin = async (req, res) => {
     if(!email || !pass) {
         return res.status(400).send("Email/Senhal inválidos");
     }
-
-    signInWithEmailAndPassword(auth, email, pass)
+    signInWithEmailAndPassword(webAuth, email, pass)
         .then((userCredential) => {
-            return res.status(201).send({token: userCredential.user.accessToken});
+            const refresh_token = userCredential._tokenResponse.refreshToken;
+            const uid = userCredential._tokenResponse.localId;
+            const id_token = userCredential._tokenResponse.idToken;
+            setFirebaseToken(refresh_token, uid)
+            return res.status(201).send({token: id_token});
         })
         .catch((error) => {
             return res.status(400).send("Email/Senhal inválidos");
