@@ -1,6 +1,6 @@
 import Paper from "@mui/material/Paper";
 import LoadingOverlay from "./LoadingOverlay";
-import { DataGrid, useGridApiContext } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import PhoneIcon from '@mui/icons-material/Phone';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
@@ -9,7 +9,6 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import { makeStyles } from "@mui/styles";
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
-import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
@@ -20,7 +19,10 @@ import SportsScoreIcon from '@mui/icons-material/SportsScore';
 import ToggleButton from '@mui/material/ToggleButton';
 import Button from "@mui/material/Button";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState
+} from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import { Typography } from "@mui/material";
 

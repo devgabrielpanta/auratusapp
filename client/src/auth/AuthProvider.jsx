@@ -1,5 +1,7 @@
-import { createContext, useEffect, useState } from "react";
-import dayjs from "dayjs";
+import {
+    createContext,
+    useState
+} from "react";
 
 export const AuthContext = createContext();
 

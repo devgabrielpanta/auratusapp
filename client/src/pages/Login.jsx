@@ -1,9 +1,14 @@
 //React imports
-import { useContext, useState, useEffect } from "react";
+import {
+    useContext,
+    useState
+} from "react";
 import { useNavigate } from 'react-router-dom';
-import dayjs from "dayjs";
 //Form imports
-import { useForm, Controller } from "react-hook-form";
+import {
+    useForm,
+    Controller
+} from "react-hook-form";
 //Material elements and icons
 import Box from "@mui/material/Box";
 import IconButton from '@mui/material/IconButton';
@@ -17,7 +22,6 @@ import Button from "@mui/material/Button";
 //Auth imports
 import { authLogin } from "../services/auth";
 import { AuthContext } from "../auth/AuthProvider";
-import { Navigate } from "react-router-dom";
 
 export default function Login() {
     //form states

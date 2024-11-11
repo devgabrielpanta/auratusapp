@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "./AuthProvider";
-import dayjs from "dayjs";
 
 export default function Protected({children}) {
     const {signedIn} = useContext(AuthContext);
