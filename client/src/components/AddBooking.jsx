@@ -89,14 +89,14 @@ export default function AddBooking({
   }, [drawerAction, editBooking]);
 
   const handleService = () => {
-    const breakService = dayjs().set("hour", 16).set("minute", 0).set("second", 0);
-    return dayjs(bookingTime).isBefore(breakService) ? "Almoço" : "Jantar"
+    return dayjs(bookingTime).get("hours") < 16 ? "Almoço" : "Jantar";
   };
   
   useEffect(() => {
     const currentService = handleService();
     setBookingService(currentService)
     setValue("service", currentService);
+    setValue("booking_time", dayjs(bookingTime).format("DD/MM/YYYY HH:mm"));
   }, [bookingTime, setValue]);
 
   const clearUpdateDrawer = () => {
@@ -426,15 +426,20 @@ export default function AddBooking({
             />
           </Box>
         </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Controller 
           name="booking_time"
-          defaultValue={dayjs(bookingTime).format("DD/MM/YYYY HH:mm")}
+          defaultValue={bookingTime}
           control={control}
           render={({field:{value}}) => 
-            <Input value={value} hidden/>
+            <Input
+              //sx={{display: "none"}}
+              value={value}
+              type="datetime"
+            />
           }
         />
-        
+        </LocalizationProvider>
         </Box>
         
         <Box sx={{
@@ -460,8 +465,6 @@ export default function AddBooking({
 
         </Box>
 
-        <Divider sx={{ height: 30 }} variant="middle" />
-
        <Controller 
         name="guest_name"
         control={control}
@@ -469,7 +472,12 @@ export default function AddBooking({
         onChange={ (value) => {setBookingGuestName(value)} }
         render={ ( {field: {onChange, value}} ) =>
           <TextField
-          sx={{ marginLeft: 8, marginBottom: 2, width: 220}}
+          sx={{
+            marginLeft: 8,
+            marginBottom: 2,
+            marginTop: 3,
+            width: 220
+          }}
           inputProps={{ style: {fontSize: 14} }}
           label="Nome"
           value={value}

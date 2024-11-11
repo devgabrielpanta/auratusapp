@@ -49,7 +49,7 @@ const updateBooking = async (req, res) => {
     const { id } = req.params;
     // falha de segurança grave: o usuário pode enviar qualquer campo no corpo da requisição
     // futuramente adicionar um filtro para ver se o usuário está editando a sua própria reserva
-    const updateBooking = req.body;
+    const updateBooking = req.body.bookings;
     const newBookingData = await bookingsModel.update(id, updateBooking);
     res.status(201).json({
       message: "Reserva atualizada com sucesso",

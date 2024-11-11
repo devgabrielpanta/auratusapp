@@ -5,13 +5,13 @@ export const getBookings = () => {
 };
 
 export const addBooking = (booking) => {
-  return api.post("/bookings", booking).then((response) => {
+  return api.post("/bookings", {bookings: booking}).then((response) => {
     return response.data
   });
 };
 
 export const updateBooking = (id, booking) => {
-  return api.put(`/bookings/${id}`, booking).then((response) => {
+  return api.put(`/bookings/${id}`, {bookings: booking}).then((response) => {
     return response.data
   });
 };
