@@ -73,7 +73,7 @@ const create = async (bookingData, user) => {
 // (R)ead bookings:
 const getAll = async (user) => {
   const query =
-  `SELECT b.*
+  `SELECT b.id, guest_name, guest_count, booking_time, guest_phone, guest_mail, booking_status, booking_source, service
   FROM ${dbName} b
   JOIN ${dbRestaurants} r ON b.restaurant_id = r.id
   JOIN ${dbUsers} u ON r.user_id = u.id

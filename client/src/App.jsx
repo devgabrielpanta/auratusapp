@@ -27,15 +27,19 @@ export default function App() {
   const [alertMessage, setAlertMessage] = useState("hidden");
   const [drawerAction, setDrawerAction] = useState("createBookings");
   const [editBooking, setEditingBooking] = useState(null);
-  
+
+  const loadingBookings = async () => {
+    try {
+      const data = await getBookings();
+      setBookings(data.bookings);
+      setLoading(false);
+    } catch (error) {
+      console.error(error)
+    }
+  };
 
   useEffect(() => {
-    getBookings()
-      .then((data) => {
-        setBookings(data);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
+    loadingBookings();
   }, []);
 
   const changeDrawerState = (action) => {

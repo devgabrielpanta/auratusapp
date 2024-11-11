@@ -39,8 +39,11 @@ export default function BookingsTable({
   const [mappedRows, setMappedRows] = useState([]);
 
   useEffect(() => {
+    if (loading) {
+      return
+    };
+    if (Array.isArray(bookingsList)) {
     const bookingsRows = bookingsList.map((row, index) => ({
-      //null list operations ?
       booking_status: row.booking_status,
       id: row.id || index,
       guest_name: row.guest_name,
@@ -50,8 +53,11 @@ export default function BookingsTable({
       guest_mail: row.guest_mail,
       booking_source: row.booking_source,
       service: row.service,
-    }));
-    setMappedRows(bookingsRows);
+      }));
+      setMappedRows(bookingsRows);
+    } else {
+      setMappedRows([]);
+    }
     setClickedRow(null);
   }, [bookingsList]);
 
