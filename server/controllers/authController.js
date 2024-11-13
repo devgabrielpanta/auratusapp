@@ -8,14 +8,14 @@ export const handleLogin = async (req, res) => {
     const pass = req.body.pass;
 
     if(!email || !pass) {
-        return res.status(400).send("Email/Senhal inválidos");
+        return res.status(400).send("Email/Senha inválidos");
     }
     signInWithEmailAndPassword(webAuth, email, pass)
         .then((userCredential) => {
             const refresh_token = userCredential._tokenResponse.refreshToken;
             const uid = userCredential._tokenResponse.localId;
             const id_token = userCredential._tokenResponse.idToken;
-            setFirebaseToken(refresh_token, uid)
+            setFirebaseToken(refresh_token, id_token, uid)
             return res.status(201).send({token: id_token});
         })
         .catch((error) => {

@@ -15,11 +15,11 @@ export const getUserByEmail = async (email) => {
     }    
 };
 
-export const setFirebaseToken = async (token, uid) => {
-    const fields = "firebase_token = ?";
+export const setFirebaseToken = async (refresh_token, id_token, uid) => {
+    const fields = "firebase_token = ?, prev_firebase_token = ?";
     const query = `UPDATE ${dbName} SET ${fields} WHERE firebase_id = "${uid}"`;
 
-    const values = [token];
+    const values = [refresh_token, id_token];
 
     db.promise().query(query, values)
         .then((result) => {
