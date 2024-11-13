@@ -3,38 +3,11 @@ import admin from 'firebase-admin';
 import serviceAccount from "../firebase-credential.json" assert { type: "json" };
 import { decode } from "jsonwebtoken";
 import dayjs from 'dayjs';
-import { getUserByEmail } from "../models/authModel.js";
-import axios from 'axios';
+import { updateToken } from "../controllers/authController.js";
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
-
-const api_key = process.env.FIREBASE_APIKEY;
-
-// Exchange a refresh token for an ID token:
-const updateToken = async (email) => {
-    const endpoint = `https://securetoken.googleapis.com/v1/token?key=${api_key}`;
-
-    const refreshToken = await getUserByEmail(email);
-    if (!refreshToken) {
-        throw new Error("Token inválido, faça o login novamente");
-    }
-    try {
-        const response = await axios.post(endpoint, {
-            grant_type: "refresh_token",
-            refresh_token: refreshToken
-        });
-
-        const idToken = response.data.id_token;
-        const user = response.data.user_id;
-
-        return { token: idToken, user: user };
-
-    } catch (error) {
-        throw new Error("Token expirado ou inválido, faça o login novamente");
-    }
-};
 
 export const protectedRoute = async (req, res, next) => {
     const authorization = req.headers?.authorization;
@@ -48,7 +21,7 @@ export const protectedRoute = async (req, res, next) => {
 
     if(dayjs(tokenExpiration).isBefore(dayjs())) {
         try {
-            const newToken = await updateToken(decodedToken.email);
+            const newToken = await updateToken(token, decodedToken.email);
             req.body.user = newToken.user;
             res.locals.newIdToken = newToken.token;
             return next();
