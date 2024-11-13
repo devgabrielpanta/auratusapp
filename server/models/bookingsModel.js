@@ -8,12 +8,12 @@ const dbName = process.env.DB_BOOKINGS;
 const dbUsers = process.env.DB_USERS;
 const dbRestaurants = process.env.DB_RESTAURANTS;
 
-const getRestaurantId = async (uid) => {
+const getRestaurantId = async (user) => {
   const query =
   `SELECT r.id AS restaurant_id
   FROM ${dbRestaurants} r
   JOIN ${dbUsers} u ON r.user_id = u.id
-  WHERE u.firebase_id = "${uid}"`;
+  WHERE u.email = "${user}"`;
   
   try {
     const [restaurants] = await db.promise().query(query);
@@ -77,7 +77,7 @@ const getAll = async (user) => {
   FROM ${dbName} b
   JOIN ${dbRestaurants} r ON b.restaurant_id = r.id
   JOIN ${dbUsers} u ON r.user_id = u.id
-  WHERE u.firebase_id = "${user}"`;
+  WHERE u.email = "${user}"`;
 
   try {
     const [result] = await db.promise().query(query);

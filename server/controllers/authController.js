@@ -1,10 +1,26 @@
 import axios from 'axios';
+import { decode } from "jsonwebtoken";
+import { setLoginTokens, getUserByEmail } from "../models/authModel.js";
 //firebase web
 import { webAuth } from "../firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { setLoginTokens, getUserByEmail, updateIdToken } from "../models/authModel.js";
+//firebase admin
+import { getAuth } from 'firebase-admin/auth';
+import admin from 'firebase-admin';
+import serviceAccount from "../firebase-credential.json" assert { type: "json" };
 
-const api_key = process.env.FIREBASE_APIKEY;
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+export const verifyToken = async (token) => {
+    try {
+        const userCredentials = await getAuth().verifyIdToken(token);
+        return userCredentials.email;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
 
 export const handleLogin = async (req, res) => {
     const email = req.body.email;
@@ -18,7 +34,7 @@ export const handleLogin = async (req, res) => {
             const refresh_token = userCredential._tokenResponse.refreshToken;
             const uid = userCredential._tokenResponse.localId;
             const id_token = userCredential._tokenResponse.idToken;
-            setLoginTokens(refresh_token, id_token, uid)
+            setLoginTokens(refresh_token, uid)
             return res.status(201).send({token: id_token});
         })
         .catch((error) => {
@@ -26,32 +42,23 @@ export const handleLogin = async (req, res) => {
         });
 };
 
-// Exchange a refresh token for an ID token:
-export const updateToken = async (actualToken, email) => {
-    const userCredential = await getUserByEmail(email);
-    const refreshToken = userCredential.firebase_refresh;
-    const prevToken = userCredential.firebase_idToken;
-
-    // Proceed if actualToken is equal previous valid token and the user have a refresh token
-    if (prevToken.length < 50 || prevToken != actualToken || !refreshToken) {
-        throw new Error("Token inválido, faça o login novamente");
-    };
-
+export const updateToken = async (req, res) => {
+    const authorization = req.headers?.authorization;
+    if (!authorization) {
+      return res.status(403).json({ message: "Bearer token was not provided" });
+    }
+    const actualToken = authorization.split("Bearer ")?.[1];
     try {
-        const endpoint = `https://securetoken.googleapis.com/v1/token?key=${api_key}`;
+        const userMail = await verifyToken(actualToken);
+        const userCredential = await getUserByEmail(userMail);
+        const refreshToken = userCredential.firebase_token;
+        const endpoint = process.env.FIREBASE_REFRESHENDPOINT;
         const response = await axios.post(endpoint, {
             grant_type: "refresh_token",
             refresh_token: refreshToken
         });
-
-        const idToken = response.data.id_token;
-        const user = response.data.user_id;
-
-        const saveToken = await updateIdToken(idToken, user);
-
-        return { token: idToken, user: user };
-
+        return res.status(201).send({token: response.data.id_token});
     } catch (error) {
-        throw new Error("Token expirado ou inválido, faça o login novamente");
+        return res.status(403).json({ message: "Não foi possível atualizar o token de acesso" });
     }
 };
