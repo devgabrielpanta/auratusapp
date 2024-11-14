@@ -1,4 +1,4 @@
-import { verifyToken } from "../controllers/authController.js";
+import { getAuth } from 'firebase-admin/auth';
 
 
 export const protectedRoute = async (req, res, next) => {
@@ -8,8 +8,8 @@ export const protectedRoute = async (req, res, next) => {
     }
     const token = authorization.split("Bearer ")?.[1];
     try {
-        const userMail = await verifyToken(token);
-        req.body.user = userMail;
+        const userCredentials = await getAuth().verifyIdToken(token);
+        req.body.user = userCredentials.email;
         return next();
     } catch (error) {
         return res.status(403).json({message: "token de acesso inválido, faça o login novamente"});

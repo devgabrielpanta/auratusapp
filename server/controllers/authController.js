@@ -1,29 +1,11 @@
 import axios from 'axios';
-import { decode } from "jsonwebtoken";
 import { setLoginTokens, getUserByEmail } from "../models/authModel.js";
 //firebase web
 import { webAuth } from "../firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 //firebase admin
 import { getAuth } from 'firebase-admin/auth';
-import admin from 'firebase-admin';
 
-admin.initializeApp({
-    credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_SERVICE_PROJECTID,
-        clientEmail: process.env.FIREBASE_SERVICE_CLIENTEMAIL,
-        privateKey: process.env.FIREBASE_SERVICE_PRIVATEKEY,
-    }),
-});
-
-export const verifyToken = async (token) => {
-    try {
-        const userCredentials = await getAuth().verifyIdToken(token);
-        return userCredentials.email;
-    } catch (error) {
-        throw new Error(error);
-    }
-};
 
 export const handleLogin = async (req, res) => {
     const email = req.body.email;
@@ -52,8 +34,8 @@ export const updateToken = async (req, res) => {
     }
     const actualToken = authorization.split("Bearer ")?.[1];
     try {
-        const userMail = await verifyToken(actualToken);
-        const userCredential = await getUserByEmail(userMail);
+        const verifiedToken = await getAuth().verifyIdToken(actualToken);
+        const userCredential = await getUserByEmail(verifiedToken.email);
         const refreshToken = userCredential.firebase_token;
         const endpoint = process.env.FIREBASE_REFRESHENDPOINT;
         const response = await axios.post(endpoint, {
