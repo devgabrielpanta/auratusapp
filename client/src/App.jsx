@@ -35,19 +35,23 @@ export default function App() {
   const [editBooking, setEditingBooking] = useState(null);
 
   const loadingBookings = async () => {
-    const userToken = localStorage.getItem("access_token");
-    if(!userToken) {
-      return null;
-    }
     try {
       const data = await getBookings();
       setBookings(data.bookings);
       setLoading(false);
-      return null;
     } catch (error) {
-      return redirect("/login");
+      console.error(error)
+      if(error.status === 403) {
+        localStorage.removeItem("access_token");
+      }
     }
   };
+
+  useEffect(() => {
+    if (window.location.pathname === "/app") {
+      loadingBookings();
+    }
+  }, [])
 
   const changeDrawerState = (action) => {
     if (action === "createBookings") {
@@ -169,7 +173,6 @@ export default function App() {
             </Protected>
          </>
         ),
-        loader: loadingBookings,
     },
     {
         path: "/login",
