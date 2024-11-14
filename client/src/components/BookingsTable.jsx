@@ -214,13 +214,26 @@ const columns = [
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
           stickyHeader
-          sx={{ zIndex: 0 }}
+          sx={{
+            zIndex: 0,
+            '& .status-header': {
+              fontSize: '12px'
+            },
+            '& .espontaneo-row': {
+              backgroundColor: "#eeecffab",
+              fontSize: "14px"
+            },
+            '& .other-row': {
+              backgroundColor: "#004aff1f",
+              fontSize: "16px"
+            }
+          }}
           localeText={{
             noRowsLabel: "Loading",
           }}
-          getRowClassName={(params) => {
-            return params.row.booking_source === 'espontaneo' ? classes.soft : "";
-          }}
+          getRowClassName={(params) => 
+            params.row.booking_source === 'espontaneo' ? 'espontaneo-row' : 'other-row'
+          }
         />
       </Paper>
     );
