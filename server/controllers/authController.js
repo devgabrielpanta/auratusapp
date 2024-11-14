@@ -10,21 +10,23 @@ import { getAuth } from 'firebase-admin/auth';
 export const handleLogin = async (req, res) => {
     const email = req.body.email;
     const pass = req.body.pass;
-
     if(!email || !pass) {
         return res.status(400).send("Email/Senha inválidos");
     }
-    signInWithEmailAndPassword(webAuth, email, pass)
-        .then((userCredential) => {
-            const refresh_token = userCredential._tokenResponse.refreshToken;
-            const uid = userCredential._tokenResponse.localId;
-            const id_token = userCredential._tokenResponse.idToken;
-            setLoginTokens(refresh_token, uid)
+    try {
+        const userCredential = await signInWithEmailAndPassword(webAuth, email, pass);
+        const refresh_token = userCredential._tokenResponse.refreshToken;
+        const uid = userCredential._tokenResponse.localId;
+        const id_token = userCredential._tokenResponse.idToken;
+        const affectedUser = await setLoginTokens(refresh_token, uid);
+        if (affectedUser < 1) {
+            return res.status(502).json({ message: "Usuário não localizado" });
+        } else {
             return res.status(201).send({token: id_token});
-        })
-        .catch((error) => {
-            return res.status(400).send("Email/Senha inválidos");
-        });
+        }
+    } catch (error) {
+        return res.status(400).json({ message: "Email/Senha inválidos" });
+    }
 };
 
 export const updateToken = async (req, res) => {
@@ -37,6 +39,9 @@ export const updateToken = async (req, res) => {
         const verifiedToken = await getAuth().verifyIdToken(actualToken);
         const userCredential = await getUserByEmail(verifiedToken.email);
         const refreshToken = userCredential.firebase_token;
+        if(!userCredential || refreshToken) {
+            return res.status(403).json({ message: "Usuário não localizado" });
+        }
         const endpoint = process.env.FIREBASE_REFRESHENDPOINT;
         const response = await axios.post(endpoint, {
             grant_type: "refresh_token",
