@@ -1,31 +1,50 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import { useState } from "react";
-import { useEffect } from "react";
+import {
+  useEffect,
+  useState
+} from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
 import BookingsTable from "./components/BookingsTable";
-import { getBookings, addBooking, updateBooking } from "./services/bookings";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat.js"
+import {
+  getBookings,
+  addBooking,
+  updateBooking
+} from "./services/bookings";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import { AuthProvider } from "./auth/AuthProvider";
+import Protected from "./auth/Protected";
+//pages
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+
 
 const drawerWidth = 400;
 const navHeight = 70;
 
 export default function App() {
+    
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [alertMessage, setAlertMessage] = useState("hidden");
   const [drawerAction, setDrawerAction] = useState("createBookings");
   const [editBooking, setEditingBooking] = useState(null);
-  
+
+  const loadingBookings = async () => {
+    try {
+      const data = await getBookings();
+      setBookings(data.bookings);
+      setLoading(false);
+    } catch (error) {
+      console.error(error)
+    }
+  };
 
   useEffect(() => {
-    getBookings()
-      .then((data) => {
-        setBookings(data);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
+    loadingBookings();
   }, []);
 
   const changeDrawerState = (action) => {
@@ -78,17 +97,17 @@ export default function App() {
     } else {
         updateBooking(handleData.id, handleData)
         .then((response) => {
-
+          const booking = response.booking;
           const updatedBooking = {
-            id: response.booking.id,
-            guest_name: response.booking.guest_name,
-            guest_count: response.booking.guest_count,
-            booking_time: response.booking.booking_time,
-            guest_phone: response.booking.guest_phone,
-            guest_mail: response.booking.guest_mail,
-            booking_status: response.booking.booking_status,
-            booking_source: response.booking.booking_source,
-            service: response.booking.service
+            id: booking.id,
+            guest_name: booking.guest_name,
+            guest_count: booking.guest_count,
+            booking_time: booking.booking_time,
+            guest_phone: booking.guest_phone,
+            guest_mail: booking.guest_mail,
+            booking_status: booking.booking_status,
+            booking_source: booking.booking_source,
+            service: booking.service
           };
          
           setBookings((prevBookings) => 
@@ -113,32 +132,53 @@ export default function App() {
     setAlertMessage("hidden");
   };
 
+  const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Home />,
+    },
+    {
+        path: "/app",
+        element: (
+          <>
+            <Protected>
+            <CssBaseline />
+            <BookingsHeader headerWidth={drawerWidth} headerHeight={navHeight} />
+            <AddBooking
+              bookingsWidth={drawerWidth}
+              handleBookings={handleBookings}
+              alertParams={alertMessage}
+              closeParams={closeAlert}
+              drawerAction={drawerAction}
+              changeDrawerState={changeDrawerState}
+              editBooking={editBooking}
+              bookingsList={bookings}
+            />
+            <BookingsTable
+              tableWidth={drawerWidth}
+              tableMt={navHeight}
+              loading={loading}
+              bookingsList={bookings}
+              beginUpdate={beginUpdate}
+              editBooking={editBooking}
+              changeDrawerState={changeDrawerState}
+              handleBookings={handleBookings}
+            />
+            </Protected>
+         </>
+        ),
+    },
+    {
+        path: "/login",
+        element: (
+          <Login />
+        ),
+    },
+]);
+  
   return (
-    <>
-      {/* Nesse caso é correto usar o fragment para retornar mais de um elemento */}
-      <CssBaseline />
-      <BookingsHeader headerWidth={drawerWidth} headerHeight={navHeight} />
-      <AddBooking
-        bookingsWidth={drawerWidth}
-        handleBookings={handleBookings}
-        alertParams={alertMessage}
-        closeParams={closeAlert}
-        drawerAction={drawerAction}
-        changeDrawerState={changeDrawerState}
-        editBooking={editBooking}
-        bookingsList={bookings}
-      />
-      <BookingsTable
-        tableWidth={drawerWidth}
-        tableMt={navHeight}
-        loading={loading}
-        bookingsList={bookings}
-        beginUpdate={beginUpdate}
-        editBooking={editBooking}
-        drawerAction={drawerAction}
-        changeDrawerState={changeDrawerState}
-        handleBookings={handleBookings}
-      />
-    </>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 }

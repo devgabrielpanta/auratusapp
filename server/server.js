@@ -2,7 +2,11 @@
 import express from "express";
 import cors from "cors";
 import bookingsRoutes from "./routes/bookingsRoutes.js";
+import authRoutes from "./routes/authRoutes.js"
 import dotenv from "dotenv";
+import { protectedRoute } from "./middlewares/authProvider.js";
+import admin from 'firebase-admin';
+
 const port = 3001;
 
 // eslint-disable-next-line no-undef
@@ -10,11 +14,22 @@ dotenv.config();
 
 // app settings
 const app = express();
-app.use(cors());
+app.use(cors({ credentials: true, origin: process.env.CLIENT_DOMAIN }));
 app.use(express.json());
 
-// app routes
+// initialize firebase
+admin.initializeApp({
+  credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_SERVICE_PROJECTID,
+      clientEmail: process.env.FIREBASE_SERVICE_CLIENTEMAIL,
+      privateKey: process.env.FIREBASE_SERVICE_PRIVATEKEY,
+  }),
+});
+
+app.use("/auth", authRoutes);
+app.use(protectedRoute);
 app.use("/bookings", bookingsRoutes);
+
 
 // Error handler for uncaught exceptions
 // app.use((err, req, res, next) => {
