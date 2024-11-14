@@ -1,6 +1,7 @@
 import {
     createContext,
-    useState
+    useState,
+    useRef
 } from "react";
 import { decode } from "jsonwebtoken";
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +16,8 @@ export function AuthProvider({ children }) {
 
     //função checkTokenValidity será chamada em um useEffect() em outro PR
     const checkTokenValidity = () => {
+        const timerRef = useRef(null);
+
         const token = localStorage.getItem("access_token");
         if (token) {
             const decodedToken = decode(token);
@@ -32,8 +35,12 @@ export function AuthProvider({ children }) {
                 navigate("/login");
                 return;
             }
-            //define the remaining time to avoid expiration
-            setTimeout(() => {
+            //clear previous timeout
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+            //define the new remaining time to avoid expiration
+            timerRef.current = setTimeout(() => {
                 handleRefreshToken(); //função será desenvolvida em outro PR
             }, expiration - 120000);
         }
