@@ -34,6 +34,10 @@ export default function App() {
   const [editBooking, setEditingBooking] = useState(null);
 
   const loadingBookings = async () => {
+    const userToken = localStorage.getItem("access_token");
+    if(!userToken) {
+      return null;
+    }
     try {
       const data = await getBookings();
       setBookings(data.bookings);
@@ -42,10 +46,6 @@ export default function App() {
       console.error(error)
     }
   };
-
-  useEffect(() => {
-    loadingBookings();
-  }, []);
 
   const changeDrawerState = (action) => {
     if (action === "createBookings") {
@@ -167,6 +167,7 @@ export default function App() {
             </Protected>
          </>
         ),
+        loader: loadingBookings,
     },
     {
         path: "/login",
