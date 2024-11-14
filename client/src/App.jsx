@@ -14,6 +14,7 @@ import {
 import {
   createBrowserRouter,
   RouterProvider,
+  redirect,
 } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthProvider";
 import Protected from "./auth/Protected";
@@ -42,8 +43,9 @@ export default function App() {
       const data = await getBookings();
       setBookings(data.bookings);
       setLoading(false);
+      return null;
     } catch (error) {
-      console.error(error)
+      return redirect("/login");
     }
   };
 
