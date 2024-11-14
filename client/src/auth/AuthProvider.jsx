@@ -10,9 +10,7 @@ export function AuthProvider({ children }) {
     const [signedIn, setSignedIn] = useState(localStorage.getItem("access_token") ? true : false);
     
     useEffect(() => {
-        if (signedIn) {
-            checkTokenValidity();
-        }
+        checkTokenValidity();
     }, [signedIn]);
 
     const values = {
