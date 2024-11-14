@@ -440,7 +440,7 @@ export default function AddBooking({
           display:"inline-flex",
           alignItems: "center",
         }}>
-        <InputLabel sx={{marginRight: 1, fontSize: 14, color: "grey.500" }}>Serviço:</InputLabel>
+        <Typography sx={{ marginRight: 1, fontSize: 14, color: "grey.500" }} id="service-label">Serviço:</Typography>
         <Controller
           name="service"
           defaultValue={bookingService}
@@ -452,7 +452,13 @@ export default function AddBooking({
             value={value}
             disable="true"
             disableUnderline
-            inputProps={{style: { fontSize: 14, color: "grey" }}}
+            inputProps={{
+              style: {
+                fontSize: 14,
+                color: "grey"
+              },
+              'aria-labelledby': 'service-label',
+            }}
             />
           }
         />
