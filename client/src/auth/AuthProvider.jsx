@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
         authRefresh()
             .then((response) => {
                 localStorage.setItem("access_token", response.token);
+                checkTokenValidity();
                 setSignedIn(true);
             })
             .catch((error) => {
