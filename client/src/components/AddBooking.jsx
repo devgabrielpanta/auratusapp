@@ -28,8 +28,7 @@ import Slider from '@mui/material/Slider';
 import Grid from '@mui/material/Grid2';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { MuiTelInput } from 'mui-tel-input'
-import { styled } from '@mui/material/styles';
+import { MuiTelInput } from 'mui-tel-input';
 import Paper from '@mui/material/Paper';
 
 export default function AddBooking({
@@ -165,17 +164,6 @@ export default function AddBooking({
       </Box>
     : "";
   };
-
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    ...theme.applyStyles('dark', {
-      backgroundColor: '#1A2027',
-    }),
-  }));
 
   const DrawerButton = () => {
       if (drawerAction === "createBookings") {
@@ -329,7 +317,13 @@ export default function AddBooking({
         <Typography sx={{ fontSize: 14, opacity: 0.8 }} id="guest-label">Guests:</Typography>
         <Grid container spacing={2} sx={{ alignItems: 'center' }}>
           <Grid>
-          <Item>
+          <Paper
+            sx={{
+              padding: 1,
+              textAlign: "center",
+              color: "black",
+            }}
+          >
             <Controller
               name="guest_count"
               control={control}
@@ -345,11 +339,17 @@ export default function AddBooking({
                 />
               }            
             />
-          </Item>
+          </Paper>
 
           </Grid>
           <Grid>
-          <Item>
+          <Paper
+            sx={{
+              padding: 1,
+              textAlign: "center",
+              color: "black",
+            }}
+          >
             <Controller
               name="guest_count"
               control={control}
@@ -372,7 +372,7 @@ export default function AddBooking({
               }
             
             />
-          </Item>
+          </Paper>
 
           </Grid>
         </Grid>
