@@ -29,7 +29,7 @@ export const handleLogin = async (req, res) => {
     }
 };
 
-export const updateToken = async (req, res) => {
+export const refreshToken = async (req, res) => {
     const authorization = req.headers?.authorization;
     if (!authorization) {
       return res.status(403).json({ message: "Bearer token was not provided" });
@@ -38,14 +38,14 @@ export const updateToken = async (req, res) => {
     try {
         const verifiedToken = await getAuth().verifyIdToken(actualToken);
         const userCredential = await getUserByEmail(verifiedToken.email);
-        const refreshToken = userCredential.firebase_token;
-        if(!userCredential || refreshToken) {
+        const refresh_token = userCredential.firebase_token;
+        if(!userCredential || refresh_token) {
             return res.status(403).json({ message: "Usuário não localizado" });
         }
         const endpoint = process.env.FIREBASE_REFRESHENDPOINT;
         const response = await axios.post(endpoint, {
             grant_type: "refresh_token",
-            refresh_token: refreshToken
+            refresh_token: refresh_token
         });
         return res.status(201).send({token: response.data.id_token});
     } catch (error) {
