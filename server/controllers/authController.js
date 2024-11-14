@@ -7,10 +7,13 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 //firebase admin
 import { getAuth } from 'firebase-admin/auth';
 import admin from 'firebase-admin';
-import serviceAccount from "../firebase-credential.json" assert { type: "json" };
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert({
+        projectId: process.env.FIREBASE_SERVICE_PROJECTID,
+        clientEmail: process.env.FIREBASE_SERVICE_CLIENTEMAIL,
+        privateKey: process.env.FIREBASE_SERVICE_PRIVATEKEY,
+    }),
 });
 
 export const verifyToken = async (token) => {
