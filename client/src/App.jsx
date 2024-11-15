@@ -15,6 +15,7 @@ import {
 import {
   createBrowserRouter,
   RouterProvider,
+  redirect,
 } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthProvider";
 import Protected from "./auth/Protected";
@@ -49,8 +50,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    loadingBookings();
-  }, []);
+    if (window.location.pathname === "/app") {
+      loadingBookings();
+    }
+  }, [])
 
   const changeDrawerState = (action) => {
     if (action === "createBookings") {
