@@ -1,7 +1,7 @@
 import {
     createContext,
     useState,
-    useRef
+    useEffect
 } from "react";
 import { authRefresh } from "../services/auth.js"
 import { decode } from "jsonwebtoken";
@@ -60,6 +60,10 @@ export function AuthProvider({ children }) {
             })
     };
 
+    useEffect(() => {
+        checkTokenValidity();
+    }, [signedIn]);
+    
     const values = {
         signedIn: signedIn,
         setSignedIn: setSignedIn,
