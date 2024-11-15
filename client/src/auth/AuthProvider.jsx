@@ -3,6 +3,7 @@ import {
     useState,
     useEffect
 } from "react";
+import { authRefresh } from "../services/auth.js"
 import { decode } from "jsonwebtoken";
 import { useNavigate } from 'react-router-dom';
 import dayjs from "dayjs";
@@ -44,6 +45,19 @@ export function AuthProvider({ children }) {
                 handleRefreshToken(); //função será desenvolvida em outro PR
             }, expiration - 120000);
         }
+    };
+
+    const handleRefreshToken = async () => {
+        authRefresh()
+            .then((response) => {
+                localStorage.setItem("access_token", response.token);
+                checkTokenValidity();
+                setSignedIn(true);
+            })
+            .catch((error) => {
+                setSignedIn(false);
+                navigate("/login");
+            })
     };
 
     useEffect(() => {
