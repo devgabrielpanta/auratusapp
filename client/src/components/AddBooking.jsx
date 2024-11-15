@@ -531,12 +531,12 @@ export default function AddBooking({
 
       {alertParams === "success" && (
         <Alert severity="success" onClose={closeParams}>
-          Reserva adicionada com sucesso.
+          Reserva processada com sucesso.
         </Alert>
       )}
       {alertParams === "error" && (
         <Alert severity="error" onClose={closeParams}>
-          Houve um problema, tente novamente ou abra um ticket para suporte.
+          Houve um problema, tente novamente ou solicite suporte.
         </Alert>
       )}
     </Drawer>
