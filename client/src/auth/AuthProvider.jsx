@@ -1,39 +1,38 @@
 import {
     createContext,
     useState,
-    useEffect
+    useEffect,
+    useRef
 } from "react";
-import { authRefresh } from "../services/auth.js"
-import { decode } from "jsonwebtoken";
-import { useNavigate } from 'react-router-dom';
+import { authRefresh } from "../services/auth.js";
+import { jwtDecode } from "jwt-decode";
 import dayjs from "dayjs";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [signedIn, setSignedIn] = useState(localStorage.getItem("access_token") ? true : false);
+    const timerRef = useRef(null);
     
-    const navigate = useNavigate()
 
     //função checkTokenValidity será chamada em um useEffect() em outro PR
     const checkTokenValidity = () => {
-        const timerRef = useRef(null);
-
+        
         const token = localStorage.getItem("access_token");
         if (token) {
-            const decodedToken = decode(token);
+            const decodedToken = jwtDecode(token);
             const authDay = dayjs.unix(decodedToken.auth_time).get("date");
             //redirect if token was not generated today
             if(authDay !== dayjs().get("date")) {
                 setSignedIn(false);
-                navigate("/login");
+                window.location.assign("/login");
                 return;
             }
             //redirect if token was generate today, but is expired
             const expiration = decodedToken.exp * 1000 - Date.now();
             if(expiration < 60000) {
                 setSignedIn(false);
-                navigate("/login");
+                window.location.assign("/login");
                 return;
             }
             //clear previous timeout
@@ -61,7 +60,9 @@ export function AuthProvider({ children }) {
     };
 
     useEffect(() => {
+        if (window.location.pathname === "/app") {
         checkTokenValidity();
+        };
     }, [signedIn]);
     
     const values = {
