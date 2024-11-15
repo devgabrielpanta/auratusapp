@@ -6,7 +6,6 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import LanguageIcon from '@mui/icons-material/Language';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { makeStyles } from "@mui/styles";
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
 import Box from '@mui/material/Box';
@@ -71,20 +70,6 @@ const renderedSource = (props) => {
     : sourceProp === "social" ? <InstagramIcon color="primary" />
     : <QuestionMarkIcon/>;
 };
-
-const rowStyles = makeStyles({
-  soft: {
-    backgroundColor: "#eeecffab",
-    fontSize: "14px"
-  },
-  strong: {
-    backgroundColor: "#004aff1f",
-    fontSize: "16px"
-  },
-  statusHeader: {
-    fontSize: "12px"
-  }
-});
 
 const getRowSpacing = (params) => {
   return {
@@ -194,12 +179,12 @@ const handleEditButton = (rowId) => {
 
 const columns = [
   { field: 'editar', headerName: '', width: 60, renderCell: (params) => editButton(params.row.id) },
-  { field: 'reservado', headerName: 'reservado', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(EventAvailableIcon, "black", 'reservado')},
-  { field: 'cancelado', headerName: 'cancelado', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(DoNotDisturbIcon, "red", 'cancelado')},
-  { field: 'noshown', headerName: 'noshown', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(HourglassDisabledIcon, "purple", 'noshown')},
-  { field: 'esperando', headerName: 'esperando', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(AlarmIcon, "black", 'esperando')},
-  { field: 'servindo', headerName: 'servindo', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(RestaurantIcon, "black", 'servindo')},
-  { field: 'finalizado', headerName: 'finalizado', headerClassName: () => classes.statusHeader, width: 80, renderCell: renderStatusCell(SportsScoreIcon, "black", 'finalizado')},
+  { field: 'reservado', headerName: 'reservado', headerClassName: "status-header", width: 80, renderCell: renderStatusCell(EventAvailableIcon, "black", 'reservado')},
+  { field: 'cancelado', headerName: 'cancelado', headerClassName: "status-header", width: 80, renderCell: renderStatusCell(DoNotDisturbIcon, "red", 'cancelado')},
+  { field: 'noshown', headerName: 'noshown', headerClassName: "status-header", width: 80, renderCell: renderStatusCell(HourglassDisabledIcon, "purple", 'noshown')},
+  { field: 'esperando', headerName: 'esperando', headerClassName: "status-header", width: 80, renderCell: renderStatusCell(AlarmIcon, "black", 'esperando')},
+  { field: 'servindo', headerName: 'servindo', headerClassName: "status-header", width: 80, renderCell: renderStatusCell(RestaurantIcon, "black", 'servindo')},
+  { field: 'finalizado', headerName: 'finalizado', headerClassName: "status-header", width: 80, renderCell: renderStatusCell(SportsScoreIcon, "black", 'finalizado')},
   { field: "id", headerName: "ID", width: 20 },
   { field: "guest_name", headerName: "Guest Name", width: 200 },
   { field: "guest_count", headerName: "Guests", width: 70 },
@@ -212,7 +197,6 @@ const columns = [
 
   const paginationModel = { page: 0, pageSize: 50 };
 
-  const classes = rowStyles();
 
   if (loading) {
     return (
@@ -230,13 +214,26 @@ const columns = [
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
           stickyHeader
-          sx={{ zIndex: 0 }}
+          sx={{
+            zIndex: 0,
+            '& .status-header': {
+              fontSize: '12px'
+            },
+            '& .espontaneo-row': {
+              backgroundColor: "#eeecffab",
+              fontSize: "14px"
+            },
+            '& .other-row': {
+              backgroundColor: "#004aff1f",
+              fontSize: "16px"
+            }
+          }}
           localeText={{
             noRowsLabel: "Loading",
           }}
-          getRowClassName={(params) => {
-            return params.row.booking_source === 'espontaneo' ? classes.soft : "";
-          }}
+          getRowClassName={(params) => 
+            params.row.booking_source === 'espontaneo' ? 'espontaneo-row' : 'other-row'
+          }
         />
       </Paper>
     );
@@ -257,11 +254,24 @@ const columns = [
         key={mappedRows.length}
         initialStateBookings={{ pagination: { paginationModel } }}
         stickyHeader
-        getRowClassName={(params) => {
-          return params.row.booking_source === 'espontaneo' ? classes.soft : classes.strong;
-        }}
         getRowSpacing={getRowSpacing}
-        sx={{ zIndex: 0 }}
+        sx={{
+          zIndex: 0,
+          '& .status-header': {
+            fontSize: '12px'
+          },
+          '& .espontaneo-row': {
+            backgroundColor: "#eeecffab",
+            fontSize: "14px"
+          },
+          '& .other-row': {
+            backgroundColor: "#004aff1f",
+            fontSize: "16px"
+          }
+        }}
+        getRowClassName={(params) => 
+          params.row.booking_source === 'espontaneo' ? 'espontaneo-row' : 'other-row'
+        }
         columnGroupingModel={columnGroupingModel}
         onRowClick={(params) => handleRowClick(params.row.id)}
         getRowId={(row) => row.id}
