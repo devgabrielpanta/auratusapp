@@ -2,6 +2,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import {
   useEffect,
   useState,
+  useRef
 } from "react";
 import BookingsHeader from "./components/BookingsHeader";
 import AddBooking from "./components/AddBooking";
@@ -140,9 +141,30 @@ export default function App() {
       }
   };
 
+  const alertRef = useRef(null);
+
   const closeAlert = () => {
     setAlertMessage("hidden");
   };
+
+  useEffect(() => {
+    if(alertMessage !== "hidden") {
+      //clear previous alert's timeouts
+      if (alertRef.current) {
+        clearTimeout(alertRef.current);
+      }
+      //set a timeout to auto close the alert
+      alertRef.current = setTimeout(() => {
+        closeAlert();
+        alertRef.current = null;
+      }, 10000);
+    }
+    return () => {
+      if (alertRef.current) {
+        clearTimeout(alertRef.current);
+      }
+    };
+  }, [alertMessage]);
 
   const router = createBrowserRouter([
     {
