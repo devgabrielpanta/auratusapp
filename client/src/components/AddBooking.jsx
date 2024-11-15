@@ -356,6 +356,7 @@ export default function AddBooking({
               defaultValue={bookingGuestCount}
               render={({ field: {value, onChange} }) => 
                 <Input
+                  name="guest_count"
                   value={value}
                   onChange={(event) => onChange(event.target.value)}
                   size="small"
@@ -424,7 +425,8 @@ export default function AddBooking({
           control={control}
           render={({field:{value}}) => 
             <Input
-              //sx={{display: "none"}}
+              sx={{display: "none"}}
+              name="booking_time"
               value={value}
               type="datetime"
             />
@@ -438,18 +440,25 @@ export default function AddBooking({
           display:"inline-flex",
           alignItems: "center",
         }}>
-        <InputLabel sx={{marginRight: 1, fontSize: 14, color: "grey.500" }}>Serviço:</InputLabel>
+        <Typography sx={{ marginRight: 1, fontSize: 14, color: "grey.500" }} id="service-label">Serviço:</Typography>
         <Controller
           name="service"
           defaultValue={bookingService}
           control={control}
           render={({field:{value}}) =>
             <Input
+            name="service"
             sx={{padding: 0, opacity: 0.8}}
             value={value}
             disable="true"
             disableUnderline
-            inputProps={{style: { fontSize: 14, color: "grey" }}}
+            inputProps={{
+              style: {
+                fontSize: 14,
+                color: "grey"
+              },
+              'aria-labelledby': 'service-label',
+            }}
             />
           }
         />
