@@ -41,9 +41,10 @@ export default function App() {
       setBookings(data.bookings);
       setLoading(false);
     } catch (error) {
-      console.error(error)
       if(error.status === 403) {
         localStorage.removeItem("access_token");
+      } else {
+        console.error(error);
       }
     }
   };
@@ -96,10 +97,14 @@ export default function App() {
         setAlertMessage("success");
         setLoading(false);
       })
-      .catch((err) => {
-        setAlertMessage("error");
-        setLoading(false);
-        console.error(err)
+      .catch((error) => {
+        if(error.status === 403) {
+          localStorage.removeItem("access_token");
+        } else {
+          setAlertMessage("error");
+          setLoading(false);
+          console.error(error);
+        }
       })
     } else {
         updateBooking(handleData.id, handleData)
@@ -127,10 +132,14 @@ export default function App() {
           setAlertMessage("success");
           setLoading(false);
         })
-        .catch((err) => {
-          setAlertMessage("error");
-          setLoading(false);
-          console.error(err)
+        .catch((error) => {
+          if(error.status === 403) {
+            localStorage.removeItem("access_token");
+          } else {
+            setAlertMessage("error");
+            setLoading(false);
+            console.error(error)
+          }
         })
       }
   };
