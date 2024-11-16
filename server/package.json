@@ -24,7 +24,7 @@
     "mysql2": "^3.11.3"
   },
   "engines": {
-    "node": ">20"
+    "node": "^18.12.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",
