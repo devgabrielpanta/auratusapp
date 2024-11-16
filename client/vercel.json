@@ -1,7 +1,16 @@
 {
-    "routes": [
-      { "src": "/", "dest": "/" },
-      { "src": "/login", "dest": "/login" },
-      { "src": "/app", "dest": "/app" }
-    ]
-  }
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/"
+    },
+    {
+      "source": "/login",
+      "destination": "/login"
+    },
+    {
+      "source": "/app",
+      "destination": "/app"
+    }
+  ]
+}
