@@ -4,6 +4,7 @@ import {
   useState,
   useRef
 } from "react";
+import { useNavigate } from 'react-router-dom';
 import BookingsHeader from "../components/BookingsHeader";
 import AddBooking from "../components/AddBooking";
 import BookingsTable from "../components/BookingsTable";
@@ -12,12 +13,7 @@ import {
   addBooking,
   updateBooking
 } from "../services/bookings";
-import { AuthProvider } from "../auth/AuthProvider";
-import Protected from "../auth/Protected";
 
-
-const drawerWidth = 400;
-const navHeight = 70;
 
 export default function BookingsSystem() {
     
@@ -27,6 +23,11 @@ export default function BookingsSystem() {
   const [drawerAction, setDrawerAction] = useState("createBookings");
   const [editBooking, setEditingBooking] = useState(null);
 
+  const navigate = useNavigate();
+
+  const drawerWidth = 400;
+  const navHeight = 70;
+
   const loadingBookings = async () => {
     try {
       const data = await getBookings();
@@ -35,6 +36,7 @@ export default function BookingsSystem() {
     } catch (error) {
       if(error.status === 403) {
         localStorage.removeItem("access_token");
+        navigate("/login");
       } else {
         console.error(error);
       }
@@ -90,6 +92,7 @@ export default function BookingsSystem() {
       .catch((error) => {
         if(error.status === 403) {
           localStorage.removeItem("access_token");
+          navigate("/login");
         } else {
           setAlertMessage("error");
           setLoading(false);
@@ -125,6 +128,7 @@ export default function BookingsSystem() {
         .catch((error) => {
           if(error.status === 403) {
             localStorage.removeItem("access_token");
+            navigate("/login");
           } else {
             setAlertMessage("error");
             setLoading(false);

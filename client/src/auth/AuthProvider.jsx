@@ -15,7 +15,6 @@ export function AuthProvider({ children }) {
     const timerRef = useRef(null);
     
 
-    //função checkTokenValidity será chamada em um useEffect() em outro PR
     const checkTokenValidity = () => {
         
         const token = localStorage.getItem("access_token");
@@ -24,6 +23,7 @@ export function AuthProvider({ children }) {
             const authDay = dayjs.unix(decodedToken.auth_time).get("date");
             //redirect if token was not generated today
             if(authDay !== dayjs().get("date")) {
+                localStorage.removeItem("access_token");
                 setSignedIn(false);
                 window.location.assign("/login");
                 return;
@@ -31,6 +31,7 @@ export function AuthProvider({ children }) {
             //redirect if token was generate today, but is expired
             const expiration = decodedToken.exp * 1000 - Date.now();
             if(expiration < 60000) {
+                localStorage.removeItem("access_token");
                 setSignedIn(false);
                 window.location.assign("/login");
                 return;
@@ -41,8 +42,9 @@ export function AuthProvider({ children }) {
             }
             //define the new remaining time to avoid expiration
             timerRef.current = setTimeout(() => {
-                handleRefreshToken(); //função será desenvolvida em outro PR
+                handleRefreshToken();
             }, expiration - 120000);
+            console.log(`tempo restante de sessão: ${(expiration - 120000)/1000/60}`)
         }
     };
 
@@ -55,7 +57,7 @@ export function AuthProvider({ children }) {
             })
             .catch((error) => {
                 setSignedIn(false);
-                navigate("/login");
+                window.location.assign("/login");
             })
     };
 
