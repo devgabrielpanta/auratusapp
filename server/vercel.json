@@ -1,1 +1,39 @@
-{ "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/api" }] }
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "./server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/bookings",
+      "dest": "server.js"
+    },
+    {
+      "src": "/bookings/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/auth",
+      "dest": "server.js"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/auth/refresh-token",
+      "dest": "server.js"
+    },
+    {
+      "src": "/auth/login",
+      "dest": "server.js"
+    }
+  ]
+}
