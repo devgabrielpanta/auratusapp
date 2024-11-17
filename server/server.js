@@ -54,3 +54,5 @@ app.listen(port, (err) => {
 app.on("error", (err) => {
   console.error("Server error:", err);
 });
+
+export default app;
