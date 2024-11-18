@@ -5,7 +5,7 @@ import bookingsRoutes from "./routes/bookingsRoutes.js";
 import authRoutes from "./routes/authRoutes.js"
 import dotenv from "dotenv";
 import admin from 'firebase-admin';
-import * as authController from "./controllers/authController.js";
+
 
 // eslint-disable-next-line no-undef
 dotenv.config();
@@ -24,8 +24,7 @@ admin.initializeApp({
   }),
 });
 
-app.post("/auth/refresh-token", authController.refreshToken);
-app.post("/auth/login", authController.handleLogin);
+app.use("/auth", authRoutes);
 app.use("/bookings", bookingsRoutes);
 
 app.get("/", (req, res) => {
