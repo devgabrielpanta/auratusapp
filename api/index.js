@@ -13,6 +13,4 @@ app.get("/auth", (req, res) => {
 app.post("/auth", (req, res) => {
     res.status(200).json({message: "rota post auth ok"})});
 
-app.listen(3000, () => console.log("Server running on: http://localhost.com:3000"));
-
 export default app;
