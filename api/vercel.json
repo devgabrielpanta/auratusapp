@@ -11,6 +11,11 @@
             "src": "/(.*)",
             "dest": "/api",
             "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+        },
+        {
+            "src": "/auth",
+            "dest": "/api",
+            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
         }
     ]
 }
