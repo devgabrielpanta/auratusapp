@@ -6,7 +6,6 @@ import authRoutes from "./routes/authRoutes.js"
 import dotenv from "dotenv";
 import admin from 'firebase-admin';
 
-const port = 3001;
 
 // eslint-disable-next-line no-undef
 dotenv.config();
@@ -28,24 +27,8 @@ admin.initializeApp({
 app.use("/auth", authRoutes);
 app.use("/bookings", bookingsRoutes);
 
-
-// Error handler for uncaught exceptions
-// app.use((err, req, res, next) => {
-//     if (err.code === 'ECONNRESET') {
-//       console.log('Connection was reset by the client');
-//     } else {
-//       console.error('Server error:', err);
-//     }
-//     res.status(500).send('Something went wrong!');
-//   });
-
-// start app
-app.listen(port, (err) => {
-  if (err) {
-    console.error("Server error:", err);
-  } else {
-    console.log(`server running on: http://localhost:${port}/`);
-  }
+app.get("/", (req, res) => {
+  res.json({ message: "server live" });
 });
 
 // Capture errors from the server itself
