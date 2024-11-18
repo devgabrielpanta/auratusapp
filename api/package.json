@@ -1,11 +1,11 @@
 {
-  "name": "server",
+  "name": "index",
   "type": "module",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js --watch",
+    "start": "node index.js",
+    "dev": "node index.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,6 +17,5 @@
     "node": "^18.12.1",
     "nodemon": "^3.1.7"
   },
-  "devDependencies": {},
   "description": ""
 }
