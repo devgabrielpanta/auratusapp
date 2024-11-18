@@ -9,7 +9,7 @@ import admin from 'firebase-admin';
 import axios from 'axios';
 import { setLoginTokens, getUserByEmail } from "./models/authModel.js";
 //firebase web
-import { webAuth } from "../firebase.js";
+import { webAuth } from "./firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 //firebase admin
 import { getAuth } from 'firebase-admin/auth';
