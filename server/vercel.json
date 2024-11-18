@@ -6,34 +6,10 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "server.js"
-    },
-    {
-      "src": "/bookings",
-      "dest": "server.js"
-    },
-    {
-      "src": "/bookings/(.*)",
-      "dest": "server.js"
-    },
-    {
-      "src": "/auth",
-      "dest": "server.js"
-    },
-    {
-      "src": "/auth/(.*)",
-      "dest": "server.js"
-    },
-    {
-      "src": "/auth/refresh-token",
-      "dest": "server.js"
-    },
-    {
-      "src": "/auth/login",
-      "dest": "server.js"
+      "source": "/(.*)",
+      "destination": "./server.js"
     }
   ]
 }

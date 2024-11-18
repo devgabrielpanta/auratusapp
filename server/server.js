@@ -4,7 +4,6 @@ import cors from "cors";
 import bookingsRoutes from "./routes/bookingsRoutes.js";
 import authRoutes from "./routes/authRoutes.js"
 import dotenv from "dotenv";
-import { protectedRoute } from "./middlewares/authProvider.js";
 import admin from 'firebase-admin';
 
 const port = 3001;
@@ -27,7 +26,6 @@ admin.initializeApp({
 });
 
 app.use("/auth", authRoutes);
-app.use(protectedRoute);
 app.use("/bookings", bookingsRoutes);
 
 
