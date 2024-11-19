@@ -30,6 +30,7 @@ admin.initializeApp({
 app.get("/", async (req, res) => {
     res.status(200).send("server live on vercel");
 });
+
 //testando o banco de dados no index.js
 const db = pool;
 const dbName = process.env.DB_USERS;
@@ -45,7 +46,12 @@ app.post("/teste", async (req, res) => {
     return res.status(500).send("Falha na comunicação com o banco de dados");
   }
   */
-    res.status(200).send("iniciando teste na rota post pelo index.js");
+  try {
+    const email = req.body.email;
+    return res.status(200).send(`buscando o seguinte email no db: ${email}`);
+  } catch (error) {
+    return res.status(500).send("falha no teste");
+  }
 });
 
 app.use("/auth", authRoutes);
