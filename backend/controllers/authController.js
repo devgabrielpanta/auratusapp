@@ -57,9 +57,7 @@ export const refreshToken = async (req, res) => {
  */
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { webAuth } from "../firebase.js";
-//ambiente
-import dotenv from "dotenv";
-dotenv.config();
+import { setLoginTokens } from "../models/authModel.js";
 
 export const handleLogin = async (req, res) => {
     const email = req.body.email;
@@ -81,11 +79,12 @@ export const handleLogin = async (req, res) => {
         if (!id_token) {
             return res.status(502).send("travou na variável id_token");
         }
-        return res.status(200).json({
-            refresh_token: refresh_token,
-            uid: uid,
-            id_token: id_token
-        });
+        const affectedUser = await setLoginTokens(refresh_token, uid);
+        if (!affectedUser || affectedUser < 1) {
+            return res.status(502).json({ message: "Usuário não localizado" });
+        } else {
+            return res.status(201).send({token: id_token});
+        }
     } catch (error) {
         return res.status(400).json({ message: "Email/Senha inválidos" });
     }

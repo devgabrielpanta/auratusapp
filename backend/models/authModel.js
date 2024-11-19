@@ -1,4 +1,7 @@
 import pool from "../db.js";
+//ambiente
+import dotenv from "dotenv";
+dotenv.config();
 
 const db = pool;
 const dbName = process.env.DB_USERS;
