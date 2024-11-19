@@ -1,3 +1,4 @@
+/**
 import axios from 'axios';
 import { setLoginTokens, getUserByEmail } from "../models/authModel.js";
 //firebase web
@@ -52,4 +53,13 @@ export const refreshToken = async (req, res) => {
     } catch (error) {
         return res.status(403).json({ message: "Não foi possível atualizar o token de acesso" });
     }
+};
+ */
+
+export const handleLogin = async (req, res) => {
+    res.status(200).send("iniciando a função de handleLogin");
+};
+
+export const refreshToken = async (req, res) => {
+    res.status(200).send("iniciando a função de refreshToken");
 };
