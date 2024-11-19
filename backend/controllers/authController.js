@@ -1,3 +1,4 @@
+/**
 import axios from 'axios';
 import { setLoginTokens, getUserByEmail } from "../models/authModel.js";
 //firebase web
@@ -53,9 +54,12 @@ export const refreshToken = async (req, res) => {
         return res.status(403).json({ message: "Não foi possível atualizar o token de acesso" });
     }
 };
-/**
+ */
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { webAuth } from "../firebase.js";
+//ambiente
+import dotenv from "dotenv";
+dotenv.config();
 
 export const handleLogin = async (req, res) => {
     const email = req.body.email;
@@ -64,9 +68,14 @@ export const handleLogin = async (req, res) => {
         return res.status(400).send("Email/Senha inválidos");
     }
     try {
-        const userCredential = await signInWithEmailAndPassword(webAuth, email, pass);
-        const message = `iniciando o try com o usuário: ${email}`;
-        return res.status(200).send(message);
+        const apiKey = process.env.FIREBASE_APIKEY;
+        //const authDomain = process.env.FIREBASE_AUTHDOMAIN;
+        //const projectId = process.env.FIREBASE_PROJECTID;
+        //const storageBucket = process.env.FIREBASE_STORAGEBUCKET;
+        //const messagingSenderId = process.env.FIREBASE_MESSAGINGSENDERID;
+        //const appId = process.env.FIREBASE_APPID;
+        //const userCredential = await signInWithEmailAndPassword(webAuth, email, pass);
+        return res.status(200).send(`Testando variávels de ambiente: ${apiKey}`);
     } catch (error) {
         return res.status(400).json({ message: "Email/Senha inválidos" });
     }
@@ -75,4 +84,3 @@ export const handleLogin = async (req, res) => {
 export const refreshToken = async (req, res) => {
     res.status(200).send("iniciando a função de refreshToken");
 };
- */
