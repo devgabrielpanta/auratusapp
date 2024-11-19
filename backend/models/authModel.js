@@ -19,5 +19,5 @@ export const setLoginTokens = async (refresh_token, uid) => {
 
     const values = [refresh_token];
     const result = await db.promise().query(query, values);
-    return result[0].changedRows //1 or 0 
+    return result[0].changedRows
 };

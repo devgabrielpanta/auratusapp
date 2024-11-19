@@ -7,7 +7,8 @@ import cors from "cors";
 import authRoutes from "../routes/authRoutes.js";
 import admin from 'firebase-admin';
 import "../firebase.js";
-import "../db.js";
+//import "../db.js";
+import pool from "../db.js";
 
 
 // app settings
@@ -24,9 +25,26 @@ admin.initializeApp({
   }),
 });
 
+
+
 app.get("/", async (req, res) => {
     res.status(200).send("server live on vercel");
 });
+//testando o banco de dados no index.js
+const db = pool;
+const dbName = process.env.DB_USERS;
+
+app.post("/teste", async (req, res) => {
+  try {
+    const email = req.body.email;
+    const query = `SELECT * FROM ${dbName} WHERE email = "${email}"`;
+    const [result] = await db.promise().query(query);
+    return res.status(200).send(result[0]);
+  } catch (error) {
+    return res.status(500).send("Falha na comunicação com o banco de dados");
+  }
+});
+
 app.use("/auth", authRoutes);
 
 
