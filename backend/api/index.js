@@ -35,6 +35,7 @@ const db = pool;
 const dbName = process.env.DB_USERS;
 
 app.post("/teste", async (req, res) => {
+  /**
   try {
     const email = req.body.email;
     const query = `SELECT * FROM ${dbName} WHERE email = "${email}"`;
@@ -43,6 +44,8 @@ app.post("/teste", async (req, res) => {
   } catch (error) {
     return res.status(500).send("Falha na comunicação com o banco de dados");
   }
+  */
+    res.status(200).send("iniciando teste na rota post pelo index.js");
 });
 
 app.use("/auth", authRoutes);
