@@ -57,7 +57,17 @@ export const refreshToken = async (req, res) => {
  */
 
 export const handleLogin = async (req, res) => {
-    res.status(200).send("iniciando a função de handleLogin");
+    const email = req.body.email;
+    const pass = req.body.pass;
+    if(!email || !pass) {
+        return res.status(400).send("Email/Senha inválidos");
+    }
+    try {
+        const message = `iniciando o try com o usuário: ${email}`;
+        return res.status(200).send(message);
+    } catch (error) {
+        return res.status(400).json({ message: "Email/Senha inválidos" });
+    }
 };
 
 export const refreshToken = async (req, res) => {
