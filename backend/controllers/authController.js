@@ -1,3 +1,4 @@
+/**
 import axios from 'axios';
 import { setLoginTokens, getUserByEmail } from "../models/authModel.js";
 //firebase web
@@ -53,7 +54,7 @@ export const refreshToken = async (req, res) => {
         return res.status(403).json({ message: "Não foi possível atualizar o token de acesso" });
     }
 };
-/**
+ */
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { webAuth } from "../firebase.js";
 //ambiente
@@ -68,11 +69,23 @@ export const handleLogin = async (req, res) => {
     }
     try {
         const userCredential = await signInWithEmailAndPassword(webAuth, email, pass);
-        if(!userCredential) {
-            return res.status(200).send("userCredential vazia");
-        } else {
-            return res.status(200).send(userCredential);
+        const refresh_token = userCredential._tokenResponse.refreshToken;
+        if (!refresh_token) {
+            return res.status(502).send("travou na variável refresh_token");
         }
+        const uid = userCredential._tokenResponse.localId;
+        if (!uid) {
+            return res.status(502).send("travou na variável uid");
+        }
+        const id_token = userCredential._tokenResponse.idToken;
+        if (!id_token) {
+            return res.status(502).send("travou na variável id_token");
+        }
+        return res.status(200).json({
+            refresh_token: refresh_token,
+            uid: uid,
+            id_token: id_token
+        });
     } catch (error) {
         return res.status(400).json({ message: "Email/Senha inválidos" });
     }
@@ -81,4 +94,3 @@ export const handleLogin = async (req, res) => {
 export const refreshToken = async (req, res) => {
     res.status(200).send("iniciando a função de refreshToken");
 };
- */
