@@ -68,8 +68,12 @@ export const handleLogin = async (req, res) => {
         return res.status(400).send("Email/Senha inválidos");
     }
     try {
-        //const userCredential = await signInWithEmailAndPassword(webAuth, email, pass);
-        return res.status(200).send(JSON.stringify(webAuth));
+        const userCredential = await signInWithEmailAndPassword(webAuth, email, pass);
+        if(!userCredential) {
+            return res.status(200).send("userCredential vazia");
+        } else {
+            return res.status(200).send(userCredential);
+        }
     } catch (error) {
         return res.status(400).json({ message: "Email/Senha inválidos" });
     }
