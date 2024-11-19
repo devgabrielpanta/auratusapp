@@ -1,13 +1,9 @@
 import express from "express";
+import * as authController from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.post("/login", async (req, res) => {
-    res.status(200).send("rota post /auth/login ok");
-});
-
-router.post("/refresh-token", async (req, res) => {
-    res.status(200).send("rota post /auth/refresh-token ok");
-});
+router.post("/refresh-token", authController.refreshToken);
+router.post("/login", authController.handleLogin);
 
 export default router;
