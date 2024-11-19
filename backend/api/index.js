@@ -1,10 +1,14 @@
+//ambiente
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import authRoutes from "../routes/authRoutes.js";
-import dotenv from "dotenv";
 import admin from 'firebase-admin';
+import "../firebase.js";
+import "../db.js";
 
-dotenv.config();
 
 // app settings
 const app = express();

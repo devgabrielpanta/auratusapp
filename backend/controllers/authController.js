@@ -1,4 +1,3 @@
-/**
 import axios from 'axios';
 import { setLoginTokens, getUserByEmail } from "../models/authModel.js";
 //firebase web
@@ -54,7 +53,9 @@ export const refreshToken = async (req, res) => {
         return res.status(403).json({ message: "Não foi possível atualizar o token de acesso" });
     }
 };
- */
+/**
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { webAuth } from "../firebase.js";
 
 export const handleLogin = async (req, res) => {
     const email = req.body.email;
@@ -63,6 +64,7 @@ export const handleLogin = async (req, res) => {
         return res.status(400).send("Email/Senha inválidos");
     }
     try {
+        const userCredential = await signInWithEmailAndPassword(webAuth, email, pass);
         const message = `iniciando o try com o usuário: ${email}`;
         return res.status(200).send(message);
     } catch (error) {
@@ -73,3 +75,4 @@ export const handleLogin = async (req, res) => {
 export const refreshToken = async (req, res) => {
     res.status(200).send("iniciando a função de refreshToken");
 };
+ */
