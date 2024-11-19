@@ -8,7 +8,7 @@ import authRoutes from "../routes/authRoutes.js";
 import admin from 'firebase-admin';
 import "../firebase.js";
 //import "../db.js";
-import pool from "../db.js";
+import * as db from "../db.js";
 
 
 // app settings
@@ -32,7 +32,6 @@ app.get("/", async (req, res) => {
 });
 
 //testando o banco de dados no index.js
-const db = pool;
 const dbName = process.env.DB_USERS;
 
 app.post("/teste", async (req, res) => {
@@ -47,8 +46,13 @@ app.post("/teste", async (req, res) => {
   }
   */
   try {
+    /**
     const email = req.body.email;
-    return res.status(200).send(`buscando o seguinte email no db: ${email}`);
+    const query = `SELECT * FROM ${dbName} WHERE email = "${email}"`;
+    const [result] = await db.promise().query(query);
+     */
+    return res.status(200).send(`Testando o seguinte banco de dados: ${dbName}`);
+    // return res.status(200).send(`buscando o seguinte email no db: ${email}`);
   } catch (error) {
     return res.status(500).send("falha no teste");
   }
