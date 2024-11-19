@@ -7,7 +7,7 @@ import cors from "cors";
 import authRoutes from "../routes/authRoutes.js";
 import admin from 'firebase-admin';
 import "../firebase.js";
-//import "../db.js";
+import "../db.js";
 import pool from "../db.js";
 
 
