@@ -68,19 +68,8 @@ export const handleLogin = async (req, res) => {
         return res.status(400).send("Email/Senha inválidos");
     }
     try {
-        const authDomain = process.env.FIREBASE_AUTHDOMAIN;
-        const projectId = process.env.FIREBASE_PROJECTID;
-        const storageBucket = process.env.FIREBASE_STORAGEBUCKET;
-        const messagingSenderId = process.env.FIREBASE_MESSAGINGSENDERID;
-        const appId = process.env.FIREBASE_APPID;
         //const userCredential = await signInWithEmailAndPassword(webAuth, email, pass);
-        return res.status(200).json({ 
-            authDomain: process.env.FIREBASE_AUTHDOMAIN,
-            projectId: process.env.FIREBASE_PROJECTID,
-            storageBucket: process.env.FIREBASE_STORAGEBUCKET,
-            messagingSenderId: process.env.FIREBASE_MESSAGINGSENDERID,
-            appId: process.env.FIREBASE_APPID,
-        });
+        return res.status(200).send(JSON.stringify(webAuth));
     } catch (error) {
         return res.status(400).json({ message: "Email/Senha inválidos" });
     }
