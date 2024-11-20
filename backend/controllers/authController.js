@@ -1,4 +1,3 @@
-/**
 import axios from 'axios';
 import { setLoginTokens, getUserByEmail } from "../models/authModel.js";
 //firebase web
@@ -36,7 +35,6 @@ export const refreshToken = async (req, res) => {
       return res.status(403).json({ message: "Bearer token was not provided" });
     }
     const actualToken = authorization.split("Bearer ")?.[1];
-    console.log(`actualToken: ${actualToken}`);
     try {
         const verifiedToken = await getAuth().verifyIdToken(actualToken);
         const userCredential = await getUserByEmail(verifiedToken.email);
@@ -54,7 +52,7 @@ export const refreshToken = async (req, res) => {
         return res.status(403).json({ message: "Não foi possível atualizar o token de acesso" });
     }
 };
- */
+/**
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { webAuth } from "../firebase.js";
 import { setLoginTokens } from "../models/authModel.js";
@@ -93,3 +91,4 @@ export const handleLogin = async (req, res) => {
 export const refreshToken = async (req, res) => {
     res.status(200).send("iniciando a função de refreshToken");
 };
+ */
