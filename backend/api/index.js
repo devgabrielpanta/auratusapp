@@ -52,7 +52,10 @@ app.post("/teste", async (req, res) => {
     const [result] = await db.promise().query(query);
     return res.status(200).send(result[0]);
   } catch (error) {
-      return res.status(500).send("falha no teste");
+      return res.status(500).json({
+        message: "falha no teste",
+        problema: error
+      });
   }
 });
 
