@@ -4,6 +4,12 @@
     { "src": "api/index.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "/api" }
+    {
+      "src": "/(.*)",
+      "dest": "/api",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
+    }
   ]
 }
