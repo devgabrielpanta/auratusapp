@@ -5,6 +5,7 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import authRoutes from "../routes/authRoutes.js";
+import bookingsRoutes from "../routes/bookingsRoutes.js";
 import admin from 'firebase-admin';
 import "../firebase.js";
 import "../db.js";
@@ -29,7 +30,7 @@ app.get("/", async (req, res) => {
     res.status(200).send("server live on vercel");
 });
 app.use("/auth", authRoutes);
-
+app.use("/bookings", bookingsRoutes);
 
 app.listen(3000, () => console.log('Server ready on: http://localhost:3000'));
 
