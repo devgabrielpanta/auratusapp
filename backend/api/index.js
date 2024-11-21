@@ -14,14 +14,9 @@ import "../db.js";
 const app = express();
 app.use(express.json());
 
-const allowedOrigins = [
-  process.env.CLIENT_DOMAIN,
-  `${process.env.CLIENT_DOMAIN}/`
-];
-
 app.use(cors({
   credentials: true,
-  origin: process.env.CLIENT_DOMAIN,
+  origin: `${process.env.CLIENT_DOMAIN}/`,
   methods: "GET,POST,PUT,OPTIONS",
   allowedHeaders: "authorization,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version",
 }));
