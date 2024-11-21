@@ -22,7 +22,8 @@ app.use(cors(
     originDomain,
     slashedDomain
   ],
-  methods: "GET,PUT,POST"
+  methods: "GET,PUT,POST",
+  allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 app.options('*', cors(
