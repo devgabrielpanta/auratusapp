@@ -25,6 +25,17 @@ app.use(cors(
   methods: "GET,PUT,POST"
   })
 );
+app.options('*', cors(
+  {
+    credentials: true,
+    origin: [
+      originDomain,
+      slashedDomain
+    ],
+    methods: "GET,PUT,POST"
+  })
+);
+
 app.use(express.json());
 
 // initialize firebase
