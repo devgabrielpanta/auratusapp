@@ -13,7 +13,18 @@ import "../db.js";
 
 // app settings
 const app = express();
-app.use(cors({ credentials: true, origin: process.env.CLIENT_DOMAIN }));
+const originDomain = process.env.CLIENT_DOMAIN;
+const slashedDomain = originDomain + "/";
+app.use(cors(
+  {
+  credentials: true,
+  origin: [
+    originDomain,
+    slashedDomain
+  ],
+  methods: "GET,PUT,POST"
+  })
+);
 app.use(express.json());
 
 // initialize firebase
@@ -29,16 +40,18 @@ admin.initializeApp({
 app.get("/", async (req, res) => {
     res.status(200).send("server live on vercel");
 });
+/**
 app.use((req, res, next) => {
   console.log('Origin:', req.headers.origin);
   res.header(
     "Access-Control-Allow-Origin",
-    process.env.CLIENT_DOMAIN
+    "*"
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT");
   res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
+ */
 app.use("/auth", authRoutes);
 app.use("/bookings", bookingsRoutes);
 
