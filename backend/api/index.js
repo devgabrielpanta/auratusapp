@@ -16,22 +16,16 @@ app.use(express.json());
 
 app.use(cors({
   credentials: true,
-  origin: (origin, callback) => {
-    if (!origin || origin === process.env.CLIENT_DOMAIN) {
-      callback(null, true);
-    } else {
-      callback(new Error(`Not allowed by CORS: ${origin}. Only allowedOrigins: ${process.env.CLIENT_DOMAIN}`));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: process.env.CLIENT_DOMAIN,
+  methods: "GET,POST,PUT,OPTIONS",
+  allowedHeaders: "authorization,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version",
 }));
 // cors preflight
 app.options("*", (req, res) => {
   res.set({
     "Access-Control-Allow-Origin": process.env.CLIENT_DOMAIN,
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+    "Access-Control-Allow-Headers": "authorization,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version",
     "Access-Control-Allow-Credentials": "true",
   });
   res.sendStatus(200);
