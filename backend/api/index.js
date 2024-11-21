@@ -30,6 +30,7 @@ app.get("/", async (req, res) => {
     res.status(200).send("server live on vercel");
 });
 app.use((req, res, next) => {
+  console.log('Origin:', req.headers.origin);
   res.header(
     "Access-Control-Allow-Origin",
     process.env.CLIENT_DOMAIN
