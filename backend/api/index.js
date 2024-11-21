@@ -10,34 +10,28 @@ import admin from 'firebase-admin';
 import "../firebase.js";
 import "../db.js";
 
-
 // app settings
 const app = express();
-const originDomain = process.env.CLIENT_DOMAIN;
-const slashedDomain = originDomain + "/";
-app.use(cors(
-  {
-  credentials: true,
-  origin: [
-    originDomain,
-    slashedDomain
-  ],
-  methods: "GET,PUT,POST",
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
-app.options('*', cors(
-  {
-    credentials: true,
-    origin: [
-      originDomain,
-      slashedDomain
-    ],
-    methods: "GET,PUT,POST"
-  })
-);
-
 app.use(express.json());
+
+// cors
+const allowedOrigins = [
+  process.env.CLIENT_DOMAIN,
+  `${process.env.CLIENT_DOMAIN}/`
+];
+app.use(cors({
+  credentials: true,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+app.options("*", cors());
 
 // initialize firebase
 admin.initializeApp({
