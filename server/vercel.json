@@ -3,13 +3,10 @@
   "builds": [
     { "src": "api/index.js", "use": "@vercel/node" }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "/api",
-      "headers": {
-        "Access-Control-Allow-Origin": "*"
-      }
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ],
   "headers": [
