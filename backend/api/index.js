@@ -14,15 +14,10 @@ import "../db.js";
 const app = express();
 app.use(express.json());
 
-// cors
-const allowedOrigins = [
-  process.env.CLIENT_DOMAIN,
-  `${process.env.CLIENT_DOMAIN}/`
-];
 app.use(cors({
   credentials: true,
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || origin === process.env.CLIENT_DOMAIN) {
       callback(null, true);
     } else {
       callback(new Error(`Not allowed by CORS: ${origin}. Only allowedOrigins: ${allowedOrigins.toString()}`));
