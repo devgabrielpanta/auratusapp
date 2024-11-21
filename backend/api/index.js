@@ -31,6 +31,16 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
+// cors preflight
+app.options("*", (req, res) => {
+  res.set({
+    "Access-Control-Allow-Origin": process.env.CLIENT_DOMAIN,
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true",
+  });
+  res.sendStatus(200);
+});
 
 // initialize firebase
 admin.initializeApp({
