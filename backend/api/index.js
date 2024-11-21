@@ -29,6 +29,15 @@ admin.initializeApp({
 app.get("/", async (req, res) => {
     res.status(200).send("server live on vercel");
 });
+app.use((req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    process.env.CLIENT_DOMAIN
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 app.use("/auth", authRoutes);
 app.use("/bookings", bookingsRoutes);
 
