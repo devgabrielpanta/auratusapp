@@ -20,7 +20,7 @@ app.use(cors({
     if (!origin || origin === process.env.CLIENT_DOMAIN) {
       callback(null, true);
     } else {
-      callback(new Error(`Not allowed by CORS: ${origin}. Only allowedOrigins: ${allowedOrigins.toString()}`));
+      callback(new Error(`Not allowed by CORS: ${origin}. Only allowedOrigins: ${process.env.CLIENT_DOMAIN}`));
     }
   },
   methods: ["GET", "POST", "PUT", "OPTIONS"],
