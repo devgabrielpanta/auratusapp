@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use(cors({
   credentials: true,
-  origin: process.env.CLIENT_DOMAIN,
+  origin: "*",
   methods: "GET,POST,PUT,OPTIONS",
   allowedHeaders: "authorization,X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version",
 }));
