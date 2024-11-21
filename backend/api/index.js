@@ -31,7 +31,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
-app.options("*", cors());
 
 // initialize firebase
 admin.initializeApp({
