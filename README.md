@@ -34,7 +34,7 @@ V1.4.1 - Dashboard
 - A manual conversion event is sent to digital platforms based on the reports.
 - A periodic manual report is provided with the volume of reservations and the source of the calls.
 
-## User Stories ##
+# User Stories #
 
 # 1. Host
 # 1.1 Plan services based on the reservation list
